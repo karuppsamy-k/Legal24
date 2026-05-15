@@ -57,10 +57,11 @@ export default function DashboardPage({ onNavigate }) {
           </div>
         </div>
         <nav className="sidebar-nav">
-          {navItems.map((item) => (
+          {navItems.map((item, index) => (
             <button
               key={item.id}
-              className={`nav-item${item.active ? ' active' : ''}`}
+              className={`nav-item${item.active ? ' active' : ''} fade-up`}
+              style={{ animationDelay: `${index * 0.05}s` }}
               type="button"
               onClick={() => handleNavClick(item.id)}
             >
@@ -85,7 +86,7 @@ export default function DashboardPage({ onNavigate }) {
             <h1>Welcome back, Admin</h1>
           </div>
           <div className="topbar-actions">
-            <button type="button" className="icon-button">🔔</button>
+            <button type="button" className="icon-button notification-bell">🔔</button>
             <button type="button" className="icon-button">⚙️</button>
             <button type="button" className="profile-button">Profile</button>
           </div>
@@ -162,8 +163,12 @@ export default function DashboardPage({ onNavigate }) {
               </div>
             </div>
             <div className="feed-list">
-              {auditFeed.map((item) => (
-                <div key={item.time + item.title} className="feed-item">
+              {auditFeed.map((item, index) => (
+                <div 
+                  key={item.time + item.title} 
+                  className="feed-item fade-up"
+                  style={{ animationDelay: `${0.4 + index * 0.08}s` }}
+                >
                   <span className={`feed-dot ${item.accent}`} />
                   <div>
                     <strong>{item.title}</strong>
