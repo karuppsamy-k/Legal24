@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Users, CheckCircle, ArrowRight, MessageSquare, PhoneCall, Star, Globe, MessageCircle, AtSign, Send, Mail, MapPin } from 'lucide-react';
+import ChatBot from './components/ChatBot';
 import './landing.css';
 
 export default function LandingPage() {
@@ -222,6 +223,9 @@ export default function LandingPage() {
           <p>© 2026 Legal24. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* Static Rule-Based Chatbot */}
+      <ChatBot />
     </div>
   );
 }
