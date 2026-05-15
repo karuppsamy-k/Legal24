@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import '../dashboard/dashboard.css'
+import { useAuth } from '../../core/context/AuthContext'
+import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const pendingApplications = [
   { id: 1, name: 'Ravi Singh', type: 'Advocate', date: '19/01/2022', status: 'Pending', experience: '5 years' },
@@ -8,18 +11,26 @@ const pendingApplications = [
   { id: 4, name: 'Rajesh Kumar', type: 'Advocate', date: '15/11/2021', status: 'Pending', experience: '12 years' },
 ]
 
-export default function ApprovalPage({ onNavigate }) {
+export default function ApprovalPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const closeSidebar = () => setSidebarOpen(false)
 
   const handleNavClick = (id) => {
     closeSidebar()
-    onNavigate(id)
+    navigate(`/${id}`)
+  }
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
   }
 
   const navItems = [
-    { label: 'Dash Board', id: 'dashboard' },
+    { label: 'Dash Board', id: 'admin-dashboard' },
     { label: 'Approval & Control', id: 'approval', active: true },
     { label: 'Manage Users', id: 'users' },
     { label: 'Manage Advocates', id: 'advocates' },
@@ -36,8 +47,9 @@ export default function ApprovalPage({ onNavigate }) {
           <span className="brand-mark">L</span>
           <div>
             <strong>LEGAL 24</strong>
-            <span>UserName</span>
+            <span>{user?.name || 'Admin'}</span>
           </div>
+          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close sidebar">✕</button>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
@@ -51,19 +63,30 @@ export default function ApprovalPage({ onNavigate }) {
               {item.label}
             </button>
           ))}
+
+          <button
+            className="nav-item nav-logout"
+            type="button"
+            onClick={handleLogout}
+          >
+            <LogOut size={18} style={{ marginRight: '12px' }} />
+            Logout
+          </button>
         </nav>
       </aside>
 
       <main className="dashboard-main">
         <div className="dashboard-topbar">
-          <button
-            className="hamburger-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            type="button"
-          >
-            ☰
-          </button>
-          <div>
+          {!sidebarOpen && (
+            <button
+              className="hamburger-btn"
+              onClick={() => setSidebarOpen(true)}
+              type="button"
+            >
+              ☰
+            </button>
+          )}
+          <div className="topbar-titles">
             <p className="topbar-small">APPROVAL & CONTROL</p>
             <h1>Pending Approvals</h1>
           </div>

@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import '../dashboard/dashboard.css'
+import { useAuth } from '../../core/context/AuthContext'
+import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const feedbacks = [
   { id: 1, user: 'Client Lee', message: 'Access issue on mobile app', priority: 'High', date: '2024-01-19', status: 'Open' },
@@ -9,18 +12,26 @@ const feedbacks = [
   { id: 5, user: 'David Chen', message: 'Request for email notification preferences', priority: 'Medium', date: '2024-01-15', status: 'Open' },
 ]
 
-export default function FeedbacksPage({ onNavigate }) {
+export default function FeedbacksPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const closeSidebar = () => setSidebarOpen(false)
 
   const handleNavClick = (id) => {
     closeSidebar()
-    onNavigate(id)
+    navigate(`/${id}`)
+  }
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
   }
 
   const navItems = [
-    { label: 'Dash Board', id: 'dashboard' },
+    { label: 'Dash Board', id: 'admin-dashboard' },
     { label: 'Approval & Control', id: 'approval' },
     { label: 'Manage Users', id: 'users' },
     { label: 'Manage Advocates', id: 'advocates' },
@@ -55,8 +66,9 @@ export default function FeedbacksPage({ onNavigate }) {
           <span className="brand-mark">L</span>
           <div>
             <strong>LEGAL 24</strong>
-            <span>UserName</span>
+            <span>{user?.name || 'Admin'}</span>
           </div>
+          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close sidebar">✕</button>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
@@ -70,19 +82,30 @@ export default function FeedbacksPage({ onNavigate }) {
               {item.label}
             </button>
           ))}
+
+          <button
+            className="nav-item nav-logout"
+            type="button"
+            onClick={handleLogout}
+          >
+            <LogOut size={18} style={{ marginRight: '12px' }} />
+            Logout
+          </button>
         </nav>
       </aside>
 
       <main className="dashboard-main">
         <div className="dashboard-topbar">
-          <button
-            className="hamburger-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            type="button"
-          >
-            ☰
-          </button>
-          <div>
+          {!sidebarOpen && (
+            <button
+              className="hamburger-btn"
+              onClick={() => setSidebarOpen(true)}
+              type="button"
+            >
+              ☰
+            </button>
+          )}
+          <div className="topbar-titles">
             <p className="topbar-small">FEEDBACK & SUPPORT</p>
             <h1>User Feedbacks</h1>
           </div>
@@ -103,40 +126,44 @@ export default function FeedbacksPage({ onNavigate }) {
             </div>
             <div className="table-grid">
               {feedbacks.map((feedback) => (
-                <div key={feedback.id} className="table-row" style={{ gap: '24px' }}>
-                  <div style={{ flex: 1.5 }}>
+                <div key={feedback.id} className="table-row">
+                  <div style={{ flex: 1 }}>
                     <strong>{feedback.user}</strong>
                     <span>{feedback.message}</span>
                   </div>
-                  <div>
+                  <div style={{ width: '100px', flexShrink: 0, textAlign: 'center' }}>
                     <div style={{ 
                       padding: '4px 12px', 
                       background: getPriorityColor(feedback.priority).bg, 
                       color: getPriorityColor(feedback.priority).text, 
                       borderRadius: '4px', 
-                      fontSize: '13px' 
+                      fontSize: '12px',
+                      display: 'inline-block',
+                      width: '80px'
                     }}>
                       {feedback.priority}
                     </div>
                   </div>
-                  <div>
+                  <div style={{ width: '120px', flexShrink: 0, textAlign: 'center' }}>
                     <div style={{ 
                       padding: '4px 12px', 
                       background: getStatusColor(feedback.status).bg, 
                       color: getStatusColor(feedback.status).text, 
                       borderRadius: '4px', 
-                      fontSize: '13px' 
+                      fontSize: '12px',
+                      display: 'inline-block',
+                      width: '100px'
                     }}>
                       {feedback.status}
                     </div>
                   </div>
-                  <div style={{ color: '#9aa6d2', fontSize: '13px' }}>
+                  <div style={{ width: '100px', flexShrink: 0, color: '#9aa6d2', fontSize: '13px', textAlign: 'center' }}>
                     {feedback.date}
                   </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button style={{ padding: '6px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>View</button>
+                  <div style={{ width: '180px', flexShrink: 0, display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                    <button style={{ padding: '8px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', flex: 1 }}>View</button>
                     {feedback.status !== 'Resolved' && (
-                      <button style={{ padding: '6px 12px', background: 'rgba(76, 225, 177, 0.16)', color: '#4ce1b1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Mark Done</button>
+                      <button style={{ padding: '8px 12px', background: 'rgba(76, 225, 177, 0.16)', color: '#4ce1b1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', flex: 1 }}>Mark Done</button>
                     )}
                   </div>
                 </div>
