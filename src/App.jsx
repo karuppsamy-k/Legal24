@@ -1,39 +1,90 @@
-import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
+import { AuthProvider, useAuth } from './core/context/AuthContext'
+import { AdminRoute, AdvocateRoute, ClientRoute, PublicRoute } from './core/routes/ProtectedRoutes'
+
+// Pages
+import LoginPage from './features/auth/LoginPage'
+import SignupPage from './features/auth/SignupPage'
+import ForgotPasswordPage from './features/auth/ForgotPasswordPage'
 import DashboardPage from './features/dashboard/DashboardPage'
 import ApprovalPage from './features/approval/ApprovalPage'
 import UsersPage from './features/users/UsersPage'
 import AdvocatesPage from './features/advocates/AdvocatesPage'
 import ReportsPage from './features/reports/ReportsPage'
 import FeedbacksPage from './features/feedbacks/FeedbacksPage'
+import './features/auth/auth.css'
+
+// Simple Placeholders for other roles (since they weren't in the provided codebase)
+const AdvocateDashboard = () => {
+  const { user, logout } = useAuth();
+  return (
+    <div className="auth-container">
+      <div className="auth-bg-blob" />
+      <div className="auth-bg-blob-2" />
+      <div className="auth-card" style={{ textAlign: 'center' }}>
+        <h1 style={{ color: '#fff', marginBottom: '16px' }}>Advocate Dashboard</h1>
+        <p style={{ color: '#94a3b8', marginBottom: '24px' }}>Welcome, <strong>{user?.name}</strong>. This is your professional workspace.</p>
+        <button onClick={logout} className="auth-btn">Logout</button>
+      </div>
+    </div>
+  );
+};
+
+const ClientDashboard = () => {
+  const { user, logout } = useAuth();
+  return (
+    <div className="auth-container">
+      <div className="auth-bg-blob" />
+      <div className="auth-bg-blob-2" />
+      <div className="auth-card" style={{ textAlign: 'center' }}>
+        <h1 style={{ color: '#fff', marginBottom: '16px' }}>Client Dashboard</h1>
+        <p style={{ color: '#94a3b8', marginBottom: '24px' }}>Welcome, <strong>{user?.name}</strong>. Manage your cases and consultations here.</p>
+        <button onClick={logout} className="auth-btn">Logout</button>
+      </div>
+    </div>
+  );
+};
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          </Route>
 
-  const handleNavigate = (pageId) => {
-    setCurrentPage(pageId)
-  }
+          {/* Admin Protected Routes */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin-dashboard" element={<DashboardPage />} />
+            <Route path="/approval" element={<ApprovalPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/advocates" element={<AdvocatesPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/feedbacks" element={<FeedbacksPage />} />
+          </Route>
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <DashboardPage onNavigate={handleNavigate} />
-      case 'approval':
-        return <ApprovalPage onNavigate={handleNavigate} />
-      case 'users':
-        return <UsersPage onNavigate={handleNavigate} />
-      case 'advocates':
-        return <AdvocatesPage onNavigate={handleNavigate} />
-      case 'reports':
-        return <ReportsPage onNavigate={handleNavigate} />
-      case 'feedbacks':
-        return <FeedbacksPage onNavigate={handleNavigate} />
-      default:
-        return <DashboardPage onNavigate={handleNavigate} />
-    }
-  }
+          {/* Advocate Protected Routes */}
+          <Route element={<AdvocateRoute />}>
+            <Route path="/advocate-dashboard" element={<AdvocateDashboard />} />
+          </Route>
 
-  return renderPage()
+          {/* Client Protected Routes */}
+          <Route element={<ClientRoute />}>
+            <Route path="/client-dashboard" element={<ClientDashboard />} />
+          </Route>
+
+          {/* Redirects */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  )
 }
 
 export default App

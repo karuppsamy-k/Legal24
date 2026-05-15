@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import '../dashboard/dashboard.css'
+import { useAuth } from '../../core/context/AuthContext'
+import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const advocates = [
   { id: 1, name: 'Advocate Ravi Gupta', specialization: 'Criminal Law', cases: 8, status: 'Active', experience: '15 years', rating: '4.8' },
@@ -8,18 +11,26 @@ const advocates = [
   { id: 4, name: 'Advocate Priya Singh', specialization: 'Family Law', cases: 14, status: 'Active', experience: '12 years', rating: '4.6' },
 ]
 
-export default function AdvocatesPage({ onNavigate }) {
+export default function AdvocatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const closeSidebar = () => setSidebarOpen(false)
 
   const handleNavClick = (id) => {
     closeSidebar()
-    onNavigate(id)
+    navigate(`/${id}`)
+  }
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
   }
 
   const navItems = [
-    { label: 'Dash Board', id: 'dashboard' },
+    { label: 'Dash Board', id: 'admin-dashboard' },
     { label: 'Approval & Control', id: 'approval' },
     { label: 'Manage Users', id: 'users' },
     { label: 'Manage Advocates', id: 'advocates', active: true },
@@ -36,8 +47,9 @@ export default function AdvocatesPage({ onNavigate }) {
           <span className="brand-mark">L</span>
           <div>
             <strong>LEGAL 24</strong>
-            <span>UserName</span>
+            <span>{user?.name || 'Admin'}</span>
           </div>
+          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close sidebar">✕</button>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
@@ -51,21 +63,32 @@ export default function AdvocatesPage({ onNavigate }) {
               {item.label}
             </button>
           ))}
+
+          <button
+            className="nav-item nav-logout"
+            type="button"
+            onClick={handleLogout}
+          >
+            <LogOut size={18} style={{ marginRight: '12px' }} />
+            Logout
+          </button>
         </nav>
       </aside>
 
       <main className="dashboard-main">
         <div className="dashboard-topbar">
-          <button
-            className="hamburger-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            type="button"
-          >
-            ☰
-          </button>
-          <div>
+          {!sidebarOpen && (
+            <button
+              className="hamburger-btn"
+              onClick={() => setSidebarOpen(true)}
+              type="button"
+            >
+              ☰
+            </button>
+          )}
+          <div className="topbar-titles">
             <p className="topbar-small">ADVOCATE MANAGEMENT</p>
-            <h1>Our Advocates</h1>
+            <h1>Registered Advocates</h1>
           </div>
           <div className="topbar-actions">
             <button type="button" className="icon-button">🔔</button>
@@ -78,28 +101,27 @@ export default function AdvocatesPage({ onNavigate }) {
           <article className="panel" style={{ gridColumn: '1 / -1' }}>
             <div className="panel-header">
               <div>
-                <h2>Advocates Directory</h2>
-                <p>Manage advocate profiles and assignments</p>
+                <h2>Advocate Directory</h2>
+                <p>Monitor and manage verified legal professionals</p>
               </div>
+              <button type="button" style={{ padding: '8px 16px', background: '#6c9cff', border: 'none', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>+ Add Advocate</button>
             </div>
             <div className="table-grid">
               {advocates.map((advocate) => (
-                <div key={advocate.id} className="table-row" style={{ gap: '24px' }}>
-                  <div style={{ flex: 1.5 }}>
+                <div key={advocate.id} className="table-row">
+                  <div className="user-info">
                     <strong>{advocate.name}</strong>
-                    <span>{advocate.specialization}</span>
+                    <span>{advocate.specialization} • {advocate.experience}</span>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <span style={{ color: '#9aa6d2' }}>Exp: {advocate.experience}</span>
+                  <div className="user-contact">
+                    <span style={{ color: '#9aa6d2' }}>{advocate.cases} Cases</span>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <span style={{ color: '#9aa6d2' }}>Cases: {advocate.cases}</span>
+                  <div className="user-status">
+                    <span style={{ color: '#ffd700', fontSize: '13px' }}>⭐ {advocate.rating}</span>
                   </div>
-                  <div style={{ flex: 0.8 }}>
-                    <span style={{ color: '#ffd68a' }}>★ {advocate.rating}</span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button style={{ padding: '6px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>View</button>
+                  <div className="user-actions" style={{ display: 'flex', gap: '8px' }}>
+                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Profile</button>
+                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(76, 225, 177, 0.16)', color: '#4ce1b1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Verify</button>
                   </div>
                 </div>
               ))}
