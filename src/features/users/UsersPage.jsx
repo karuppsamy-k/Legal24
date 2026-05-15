@@ -85,22 +85,29 @@ export default function UsersPage({ onNavigate }) {
             </div>
             <div className="table-grid">
               {users.map((user) => (
-                <div key={user.id} className="table-row" style={{ gap: '24px' }}>
-                  <div style={{ flex: 1 }}>
+                <div key={user.id} className="table-row">
+                  <div className="user-info">
                     <strong>{user.name}</strong>
                     <span>{user.email}</span>
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div className="user-contact">
                     <span style={{ color: '#9aa6d2' }}>{user.phone}</span>
                   </div>
-                  <div>
-                    <div style={{ padding: '4px 12px', background: user.status === 'Active' ? 'rgba(76, 225, 177, 0.16)' : 'rgba(155, 155, 155, 0.16)', color: user.status === 'Active' ? '#4ce1b1' : '#9aa6d2', borderRadius: '4px', fontSize: '13px' }}>
+                  <div className="user-status">
+                    <div style={{ 
+                      padding: '4px 12px', 
+                      background: user.status === 'Active' ? 'rgba(76, 225, 177, 0.16)' : 'rgba(155, 155, 155, 0.16)', 
+                      color: user.status === 'Active' ? '#4ce1b1' : '#9aa6d2', 
+                      borderRadius: '4px', 
+                      fontSize: '13px',
+                      display: 'inline-block'
+                    }}>
                       {user.status}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button style={{ padding: '6px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Edit</button>
-                    <button style={{ padding: '6px 12px', background: 'rgba(255, 87, 87, 0.16)', color: '#ff9999', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Remove</button>
+                  <div className="user-actions" style={{ display: 'flex', gap: '8px' }}>
+                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Edit</button>
+                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(255, 87, 87, 0.16)', color: '#ff9999', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Remove</button>
                   </div>
                 </div>
               ))}
