@@ -1,4 +1,7 @@
 /* Auth Module Styles - Legal 24 Theme Integration */
+.auth-container, .auth-container * {
+  box-sizing: border-box;
+}
 
 .auth-container {
   min-height: 100vh;
@@ -10,6 +13,7 @@
   position: relative;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
+  padding: 20px;
 }
 
 /* Premium Animated Background */
@@ -304,4 +308,26 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 32px 24px;
+    border-radius: 24px;
+  }
+  
+  .auth-header h1 {
+    font-size: 24px;
+  }
+  
+  .auth-bg-blob {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .auth-bg-blob-2 {
+    width: 250px;
+    height: 250px;
+  }
 }

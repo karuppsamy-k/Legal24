@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './core/context/AuthContext'
 import { AdminRoute, AdvocateRoute, ClientRoute, PublicRoute } from './core/routes/ProtectedRoutes'
 
 // Pages
+import LandingPage from './features/landing/LandingPage'
 import LoginPage from './features/auth/LoginPage'
 import SignupPage from './features/auth/SignupPage'
 import ForgotPasswordPage from './features/auth/ForgotPasswordPage'
@@ -53,6 +54,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route element={<PublicRoute />}>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -79,8 +81,7 @@ function App() {
           </Route>
 
           {/* Redirects */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
