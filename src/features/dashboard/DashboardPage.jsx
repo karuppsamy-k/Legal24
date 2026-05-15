@@ -47,7 +47,7 @@ export default function DashboardPage({ onNavigate }) {
   return (
     <div className="dashboard-shell">
       <div className="sidebar-overlay" style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={closeSidebar} />
-      
+
       <aside className="dashboard-sidebar" style={{ transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)' }}>
         <div className="sidebar-brand">
           <span className="brand-mark">L</span>
