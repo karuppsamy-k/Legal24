@@ -754,51 +754,120 @@
 .delay-3 {
   animation-delay: 0.24s;
 }
-
-.delay-4 {
-  animation-delay: 0.32s;
-}
-
-.delay-5 {
-  animation-delay: 0.4s;
-}
-
 @keyframes fadeUp {
   from {
     opacity: 0;
     transform: translateY(18px);
+    filter: blur(4px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
-.slide-in-top {
-  animation: slideInTop 0.9s ease both;
+@keyframes growWidth {
+  from { width: 0; }
+  to { width: var(--target-width); }
 }
 
-@keyframes fadeUp {
+
+
+@keyframes bellRing {
+  0%, 100% { transform: rotate(0); }
+  20%, 60% { transform: rotate(15deg); }
+  40%, 80% { transform: rotate(-15deg); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.sidebar { animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.summary-bar, .chart-line {
+  animation: growWidth 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.bar-1 { --target-width: 90%; }
+.bar-2 { --target-width: 75%; }
+.bar-3 { --target-width: 60%; }
+.bar-4 { --target-width: 45%; }
+
+.chart-line-1 { --target-width: 100%; }
+.chart-line-2 { --target-width: 80%; }
+.chart-line-3 { --target-width: 60%; }
+.chart-line-4 { --target-width: 40%; }
+
+.notification-bell { animation: bellRing 1s ease 1s 2; }
+
+/* Shimmer Container Removed */
+.panel, .overview-summary {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateX(18px);
   }
-
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-@keyframes slideInTop {
-  from {
-    opacity: 0;
-    transform: translateY(-18px);
-  }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(76, 225, 177, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(76, 225, 177, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 225, 177, 0); }
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.slide-in-right { animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* Interactive Hover Effects */
+.panel, .stat-card, .overview-summary {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel:hover, .overview-summary:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-item {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(4px);
+}
+
+.feed-item {
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.feed-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateX(4px);
+}
+
+.feed-dot.green {
+  animation: pulse 2s infinite;
 }
