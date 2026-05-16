@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  color: #fff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
 }
 
@@ -81,8 +81,8 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
   backdrop-filter: blur(20px);
   padding: 32px 24px;
   border-radius: 20px;
@@ -95,7 +95,7 @@
 
 .stat-card:hover {
   transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--btn-bg);
 }
 
 .stat-icon {
@@ -106,13 +106,13 @@
   align-items: center;
   justify-content: center;
   background: rgba(108, 156, 255, 0.1);
-  color: #6c9cff;
+  color: var(--accent-blue);
   margin-bottom: 8px;
 }
 
 .stat-card.success .stat-icon {
   background: rgba(76, 225, 177, 0.1);
-  color: #4ce1b1;
+  color: var(--accent-green);
 }
 
 .stat-card.value .stat-icon {
@@ -123,7 +123,7 @@
 .stat-number {
   font-size: 36px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .stat-label {
@@ -162,7 +162,7 @@
 
 .btn-secondary {
   padding: 16px 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-bg);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -186,7 +186,7 @@
 .landing-wrapper {
   background-color: #0f111a;
   min-height: 100vh;
-  color: #fff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
@@ -241,7 +241,7 @@
 }
 
 .landing-nav-links a:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .landing-nav-actions {
@@ -251,7 +251,7 @@
 }
 
 .nav-login-btn {
-  color: #fff;
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
@@ -260,7 +260,7 @@
 .nav-signup-btn {
   padding: 10px 20px;
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--text-primary);
   text-decoration: none;
   border-radius: 8px;
   font-size: 14px;
@@ -277,7 +277,7 @@
   display: inline-block;
   padding: 6px 16px;
   background: rgba(108, 156, 255, 0.1);
-  color: #6c9cff;
+  color: var(--accent-blue);
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
@@ -331,7 +331,7 @@
 
 .feature-card:hover {
   transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-panel);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -359,7 +359,7 @@
 
 /* Footer */
 .landing-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-light);
   padding: 40px 20px;
   margin-top: 40px;
   position: relative;
@@ -395,7 +395,7 @@
 }
 
 .footer-content p {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -435,13 +435,13 @@
   justify-content: center;
   font-weight: bold;
   font-size: 16px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .review-author strong {
   display: block;
   font-size: 14px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .review-author span {
@@ -452,7 +452,7 @@
 /* Detailed Footer */
 .landing-footer {
   background-color: #0f111a;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-light);
   padding: 60px 40px 20px 40px;
   position: relative;
   z-index: 1;
@@ -484,7 +484,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,7 +495,7 @@
 
 .social-icon:hover {
   background: rgba(108, 156, 255, 0.2);
-  color: #6c9cff;
+  color: var(--accent-blue);
 }
 
 .footer-links-section {
@@ -507,7 +507,7 @@
 .footer-column h3 {
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 24px;
 }
 
@@ -528,7 +528,7 @@
 }
 
 .footer-column ul li a:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .contact-list li {
@@ -542,13 +542,13 @@
 .footer-bottom {
   max-width: 1200px;
   margin: 0 auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-light);
   padding-top: 24px;
   text-align: center;
 }
 
 .footer-bottom p {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 14px;
 }
 

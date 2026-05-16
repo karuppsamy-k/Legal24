@@ -1,6 +1,6 @@
-import { usersMockData } from '../mock/UserMockData';
-import { advocatesMockData, casesMockData, approvalsMockData } from '../mock/AdditionalMockData';
-import { dashboardMockData as baseMockData } from '../mock/DashboardMockData';
+import { usersMockData } from '../mock/UserMockData.js';
+import { advocatesMockData, casesMockData, approvalsMockData } from '../mock/AdditionalMockData.js';
+import { dashboardMockData as baseMockData } from '../mock/DashboardMockData.js';
 
 export const DashboardRepository = {
   getDashboardData: async () => {

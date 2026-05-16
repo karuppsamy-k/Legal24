@@ -1,0 +1,102 @@
+/* Client Consultations Styles */
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.expert-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s;
+}
+
+.expert-card:hover {
+  background: var(--btn-bg);
+  border-color: rgba(108, 156, 255, 0.3);
+}
+
+.expert-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.expert-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(108, 156, 255, 0.1);
+  display: grid;
+  place-items: center;
+  color: var(--accent-blue);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.expert-info h3 { margin: 0; color: var(--text-primary); font-size: 18px; }
+.expert-info p { margin: 4px 0 0; color: #94a3b8; font-size: 13px; }
+
+.expert-stats {
+  display: flex;
+  gap: 20px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.expert-stat-item { display: flex; flex-direction: column; gap: 2px; }
+.expert-stat-item span:first-child { color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+.expert-stat-item span:last-child { color: var(--text-primary); font-size: 14px; font-weight: 600; }
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.slot-btn {
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slot-btn:hover {
+  background: rgba(108, 156, 255, 0.1);
+  color: var(--text-primary);
+  border-color: var(--accent-blue);
+}
+
+.consultation-history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-details h4 { margin: 0; color: var(--text-primary); font-size: 14px; }
+.history-details p { margin: 2px 0 0; color: var(--text-muted); font-size: 12px; }
+
+@media (max-width: 900px) {
+  .booking-grid { grid-template-columns: 1fr; }
+}

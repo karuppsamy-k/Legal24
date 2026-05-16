@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DashboardRepository } from '../../infrastructure/repositories/DashboardRepository';
+import { DashboardRepository } from '../../infrastructure/repositories/DashboardRepository.js';
 
 export const useDashboard = () => {
   const [data, setData] = useState(null);

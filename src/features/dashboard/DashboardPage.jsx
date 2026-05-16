@@ -1,10 +1,11 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import StatCard from '../../shared/components/organisms/StatCard.jsx'
 import './dashboard.css'
 import { useDashboard } from '../../core/hooks/useDashboard.js'
 import { useAuth } from '../../core/context/AuthContext'
-import { LogOut, Users, Briefcase, FileText, ChevronDown, BarChart2, TrendingUp, PieChart, Target, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { LogOut, Users, Briefcase, FileText, ChevronDown, BarChart2, TrendingUp, PieChart, Target, ChevronLeft, ChevronRight, Bell } from 'lucide-react'
+import TopBar from '../../shared/components/organisms/TopBar'
 
 const ANALYTICS_DATA = {
   user: {
@@ -156,14 +157,14 @@ const AnalyticsChart = () => {
     return (
       <div key={ds.label} className="gauge-item">
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={strokeWidth} />
+          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="var(--border-color)" strokeWidth={strokeWidth} />
           <circle 
             cx={size/2} cy={size/2} r={radius} fill="none" stroke={ds.color} strokeWidth={strokeWidth}
             strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
             className="gauge-progress"
           />
-          <text x="50%" y="45%" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold">{ds.percentage}%</text>
-          <text x="50%" y="65%" textAnchor="middle" fill={ds.trend.startsWith('+') ? '#4ce1b1' : '#f87171'} fontSize="10">{ds.trend}</text>
+          <text x="50%" y="45%" textAnchor="middle" fill="var(--text-primary)" fontSize="16" fontWeight="bold">{ds.percentage}%</text>
+          <text x="50%" y="65%" textAnchor="middle" fill={ds.trend.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-red)'} fontSize="10">{ds.trend}</text>
         </svg>
         <span className="gauge-label">{ds.label}</span>
       </div>
@@ -196,8 +197,8 @@ const AnalyticsChart = () => {
               />
             );
           })}
-          <text x="50%" y="48%" textAnchor="middle" fill="#fff" fontSize="18" fontWeight="bold">100%</text>
-          <text x="50%" y="58%" textAnchor="middle" fill="#64748b" fontSize="10" textTransform="uppercase">Overview</text>
+          <text x="50%" y="48%" textAnchor="middle" fill="var(--text-primary)" fontSize="18" fontWeight="bold">100%</text>
+          <text x="50%" y="58%" textAnchor="middle" fill="var(--text-muted)" fontSize="10" textTransform="uppercase">Overview</text>
         </svg>
         <div className="pie-legend">
           {currentData.datasets.map(ds => (
@@ -248,7 +249,7 @@ const AnalyticsChart = () => {
                     <rect key={`${dsIdx}-${i}`} x={x} y={chartHeight - barHeight} width={groupWidth - 2} height={barHeight} fill={ds.color} rx="4" className="chart-bar" />
                   );
                 })}
-                <text x={xBase} y={chartHeight + 25} textAnchor="middle" fill="#64748b" fontSize="12" fontWeight="500">{label}</text>
+                <text x={xBase} y={chartHeight + 25} textAnchor="middle" fill="var(--text-muted)" fontSize="12" fontWeight="500">{label}</text>
               </g>
             );
           })}
@@ -277,7 +278,7 @@ const AnalyticsChart = () => {
           );
         })}
         {currentData.labels.map((label, i) => (
-          <text key={i} x={paddingX + (i / (currentData.labels.length - 1)) * drawWidth} y={chartHeight + 25} textAnchor="middle" fill="#64748b" fontSize="12" fontWeight="500">{label}</text>
+          <text key={i} x={paddingX + (i / (currentData.labels.length - 1)) * drawWidth} y={chartHeight + 25} textAnchor="middle" fill="var(--text-muted)" fontSize="12" fontWeight="500">{label}</text>
         ))}
       </svg>
     );
@@ -362,7 +363,7 @@ const navItems = [
 ]
 
 export default function DashboardPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { sidebarOpen, setSidebarOpen } = useOutletContext()
   const { data, loading } = useDashboard();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -394,65 +395,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="dashboard-shell">
-      <div className="sidebar-overlay" style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={closeSidebar} />
-
-      <aside className="dashboard-sidebar" style={{ transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)' }}>
-        <div className="sidebar-brand">
-          <span className="brand-mark">L</span>
-          <div>
-            <strong>LEGAL 24</strong>
-            <span>{user?.name || 'Admin'}</span>
-          </div>
-          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close sidebar">✕</button>
-        </div>
-        <nav className="sidebar-nav">
-          {navItems.map((item, index) => (
-            <button
-              key={item.id}
-              className={`nav-item${item.active ? ' active' : ''} fade-up`}
-              style={{ animationDelay: `${index * 0.05}s` }}
-              type="button"
-              onClick={() => handleNavClick(item.id)}
-            >
-              <span className="nav-icon" />
-              {item.label}
-            </button>
-          ))}
-
-          <button
-            className="nav-item nav-logout fade-up"
-            style={{ animationDelay: '0.4s' }}
-            type="button"
-            onClick={handleLogout}
-          >
-            <LogOut size={18} style={{ marginRight: '12px' }} />
-            Logout
-          </button>
-        </nav>
-      </aside>
-
-      <main className="dashboard-main">
-        <div className="dashboard-topbar">
-          {!sidebarOpen && (
-            <button
-              className="hamburger-btn"
-              onClick={() => setSidebarOpen(true)}
-              type="button"
-            >
-              ☰
-            </button>
-          )}
-          <div className="topbar-titles">
-            <p className="topbar-small">Dash Board</p>
-            <h1>Welcome back, Admin</h1>
-          </div>
-          <div className="topbar-actions">
-            <button type="button" className="icon-button notification-bell">🔔</button>
+    <>
+      <TopBar 
+        title="Welcome back, Admin"
+        subtitle="Dash Board"
+        isSidebarOpen={sidebarOpen}
+        onMenuClick={() => setSidebarOpen(true)}
+        actions={
+          <>
             <button type="button" className="icon-button">⚙️</button>
-            <button type="button" className="profile-button">Profile</button>
-          </div>
-        </div>
+          </>
+        }
+      />
 
         <section className="dashboard-main-grid">
           <div className="overview-cards">
@@ -485,11 +439,7 @@ export default function DashboardPage() {
                 <span>Pending approvals</span>
               </div>
             </div>
-            <div className="summary-graph">
-              {pulse.bars.map((bar) => (
-                <span key={bar.id} className={`summary-bar ${bar.class}`} />
-              ))}
-            </div>
+            {/* Progress bars removed as requested */}
           </div>
 
 
@@ -592,7 +542,6 @@ export default function DashboardPage() {
             </div>
           </article>
         </section>
-      </main>
-    </div>
+    </>
   )
 }
