@@ -1,0 +1,105 @@
+/* Advocate Documents Styles */
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.doc-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.doc-card:hover {
+  background: var(--btn-bg);
+  transform: translateY(-4px);
+  border-color: rgba(108, 156, 255, 0.3);
+}
+
+.doc-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(108, 156, 255, 0.1);
+  color: var(--accent-blue);
+  display: grid;
+  place-items: center;
+}
+
+.doc-card h4 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.docs-sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.storage-info {
+  background: rgba(108, 156, 255, 0.05);
+  border: 1px solid rgba(108, 156, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.storage-bar {
+  height: 4px;
+  background: var(--btn-bg);
+  border-radius: 999px;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.storage-fill {
+  height: 100%;
+  background: #6c9cff;
+  width: 45%;
+}
+
+.folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.folder-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #94a3b8;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.folder-item:hover {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+.folder-item.active {
+  background: rgba(108, 156, 255, 0.1);
+  color: var(--accent-blue);
+}

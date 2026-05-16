@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../core/context/AuthContext';
+import { useTheme } from '../../core/context/ThemeContext';
 import './auth.css';
 
 const LoginPage = () => {
@@ -12,6 +13,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -34,10 +36,24 @@ const LoginPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle */}
+      <motion.button
+        className="auth-theme-toggle"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+      </motion.button>
+
       <div className="auth-bg-blob" />
       <div className="auth-bg-blob-2" />
 
-      <motion.div 
+      <motion.div
         className="auth-card"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -47,8 +63,8 @@ const LoginPage = () => {
           <div className="auth-brand">
             <div className="brand-mark-large">L</div>
             <div style={{ textAlign: 'left' }}>
-              <strong style={{ display: 'block', color: '#fff', fontSize: '20px' }}>LEGAL 24</strong>
-              <span style={{ color: '#64748b', fontSize: '12px', fontWeight: '600', letterSpacing: '1px' }}>ADMIN PANEL</span>
+              <strong style={{ display: 'block', color: 'var(--text-heading)', fontSize: '20px' }}>LEGAL 24</strong>
+              <span style={{ color: 'var(--text-muted)', fontSize: '12px', fontWeight: '600', letterSpacing: '1px' }}>ADMIN PANEL</span>
             </div>
           </div>
           <h1>Welcome Back</h1>
@@ -57,7 +73,7 @@ const LoginPage = () => {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && (
-            <motion.div 
+            <motion.div
               className="error-message"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -71,9 +87,9 @@ const LoginPage = () => {
             <label>Email Address</label>
             <div className="input-container">
               <Mail className="input-icon" size={20} />
-              <input 
-                type="email" 
-                className="auth-input" 
+              <input
+                type="email"
+                className="auth-input"
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -86,16 +102,16 @@ const LoginPage = () => {
             <label>Password</label>
             <div className="input-container">
               <Lock className="input-icon" size={20} />
-              <input 
-                type={showPassword ? "text" : "password"} 
-                className="auth-input" 
+              <input
+                type={showPassword ? "text" : "password"}
+                className="auth-input"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >

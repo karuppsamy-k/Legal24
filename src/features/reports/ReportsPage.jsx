@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import '../dashboard/dashboard.css'
 import { useAuth } from '../../core/context/AuthContext'
-import { LogOut } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { LogOut, FileText, Download, TrendingUp, Users, Briefcase } from 'lucide-react'
+import TopBar from '../../shared/components/organisms/TopBar'
 
 export default function ReportsPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { sidebarOpen, setSidebarOpen } = useOutletContext()
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -32,63 +33,13 @@ export default function ReportsPage() {
   ]
 
   return (
-    <div className="dashboard-shell">
-      <div className="sidebar-overlay" style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={closeSidebar} />
-      
-      <aside className="dashboard-sidebar" style={{ transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)' }}>
-        <div className="sidebar-brand">
-          <span className="brand-mark">L</span>
-          <div>
-            <strong>LEGAL 24</strong>
-            <span>{user?.name || 'Admin'}</span>
-          </div>
-          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close sidebar">✕</button>
-        </div>
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              className={`nav-item${item.active ? ' active' : ''}`}
-              type="button"
-              onClick={() => handleNavClick(item.id)}
-            >
-              <span className="nav-icon" />
-              {item.label}
-            </button>
-          ))}
-
-          <button
-            className="nav-item nav-logout"
-            type="button"
-            onClick={handleLogout}
-          >
-            <LogOut size={18} style={{ marginRight: '12px' }} />
-            Logout
-          </button>
-        </nav>
-      </aside>
-
-      <main className="dashboard-main">
-        <div className="dashboard-topbar">
-          {!sidebarOpen && (
-            <button
-              className="hamburger-btn"
-              onClick={() => setSidebarOpen(true)}
-              type="button"
-            >
-              ☰
-            </button>
-          )}
-          <div className="topbar-titles">
-            <p className="topbar-small">ANALYTICS</p>
-            <h1>Reports & Analytics</h1>
-          </div>
-          <div className="topbar-actions">
-            <button type="button" className="icon-button">🔔</button>
-            <button type="button" className="icon-button">⚙️</button>
-            <button type="button" className="profile-button">Profile</button>
-          </div>
-        </div>
+    <>
+      <TopBar 
+        title="Reports & Analytics"
+        subtitle="PLATFORM DATA"
+        isSidebarOpen={sidebarOpen}
+        onMenuClick={() => setSidebarOpen(true)}
+      />
 
         <section className="dashboard-overview">
           <div className="overview-cards">
@@ -133,7 +84,6 @@ export default function ReportsPage() {
             </div>
           </article>
         </section>
-      </main>
-    </div>
+    </>
   )
 }

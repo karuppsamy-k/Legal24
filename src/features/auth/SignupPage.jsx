@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, Lock, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Phone, Lock, CheckCircle2, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../core/context/AuthContext';
+import { useTheme } from '../../core/context/ThemeContext';
 import './auth.css';
 
 const SignupPage = () => {
@@ -17,6 +18,7 @@ const SignupPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { signup } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -42,6 +44,20 @@ const SignupPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle */}
+      <motion.button
+        className="auth-theme-toggle"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+      </motion.button>
+
       <div className="auth-bg-blob" />
       <div className="auth-bg-blob-2" />
 
@@ -55,8 +71,8 @@ const SignupPage = () => {
           <div className="auth-brand">
             <div className="brand-mark-large">L</div>
             <div style={{ textAlign: 'left' }}>
-              <strong style={{ display: 'block', color: '#fff', fontSize: '20px' }}>LEGAL 24</strong>
-              <span style={{ color: '#64748b', fontSize: '12px', fontWeight: '600', letterSpacing: '1px' }}>JOIN PLATFORM</span>
+              <strong style={{ display: 'block', color: 'var(--text-heading)', fontSize: '20px' }}>LEGAL 24</strong>
+              <span style={{ color: 'var(--text-muted)', fontSize: '12px', fontWeight: '600', letterSpacing: '1px' }}>JOIN PLATFORM</span>
             </div>
           </div>
           <h1>Create Account</h1>
