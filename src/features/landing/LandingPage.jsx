@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Users, CheckCircle, ArrowRight, MessageSquare, PhoneCall, Star, Globe, MessageCircle, AtSign, Send, Mail, MapPin } from 'lucide-react';
+import { Shield, Users, CheckCircle, ArrowRight, MessageSquare, PhoneCall, Star, Globe, MessageCircle, AtSign, Send, Mail, MapPin, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../../core/context/ThemeContext';
 import ChatBot from './components/ChatBot';
 import './landing.css';
 
 export default function LandingPage() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <div className="landing-wrapper">
       {/* Navbar */}
@@ -18,6 +21,13 @@ export default function LandingPage() {
           <a href="#stats">Impact</a>
         </div>
         <div className="landing-nav-actions">
+          <button
+            className="landing-theme-toggle"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
           <Link to="/login" className="nav-login-btn">Login</Link>
           <Link to="/signup" className="nav-signup-btn">Get Started</Link>
         </div>
