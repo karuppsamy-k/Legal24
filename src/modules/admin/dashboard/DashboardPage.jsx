@@ -4,7 +4,7 @@ import StatCard from '../../../shared/components/organisms/StatCard.jsx'
 import './dashboard.css'
 import { useDashboard } from '../../../core/hooks/useDashboard.js'
 import { useAuth } from '../../../core/context/AuthContext'
-import { LogOut, Users, Briefcase, FileText, ChevronDown, BarChart2, TrendingUp, PieChart, Target, ChevronLeft, ChevronRight, Bell } from 'lucide-react'
+import { LogOut, Users, Briefcase, FileText, ChevronDown, BarChart2, TrendingUp, PieChart, Target, ChevronLeft, ChevronRight, Bell, PhoneCall } from 'lucide-react'
 import TopBar from '../../../shared/components/organisms/TopBar'
 
 const ANALYTICS_DATA = {
@@ -367,6 +367,17 @@ export default function DashboardPage() {
   const { data, loading } = useDashboard();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [instantRequests, setInstantRequests] = useState([]);
+
+  useEffect(() => {
+    const fetchInstantRequests = () => {
+      const stored = JSON.parse(localStorage.getItem('legal24_instant_requests') || '[]');
+      setInstantRequests(stored);
+    };
+    fetchInstantRequests();
+    const interval = setInterval(fetchInstantRequests, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const closeSidebar = () => setSidebarOpen(false)
 
@@ -402,9 +413,34 @@ export default function DashboardPage() {
         isSidebarOpen={sidebarOpen}
         onMenuClick={() => setSidebarOpen(true)}
         actions={
-          <>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {instantRequests.some(r => r.status === 'Pending') && (
+              <button 
+                type="button" 
+                className="icon-button" 
+                onClick={() => navigate('/reports')} 
+                title="Urgent Instant Consultations!"
+                style={{ 
+                  color: '#ef4444', 
+                  animation: 'pulse-alert 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                  position: 'relative'
+                }}
+              >
+                <PhoneCall size={20} />
+                <span style={{
+                  position: 'absolute', top: '4px', right: '4px', width: '8px', height: '8px', 
+                  background: '#ef4444', borderRadius: '50%'
+                }}></span>
+                <style>{`
+                  @keyframes pulse-alert {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: .7; transform: scale(1.15); color: #ff0000; }
+                  }
+                `}</style>
+              </button>
+            )}
             <button type="button" className="icon-button" onClick={() => navigate('/settings')} title="Settings">⚙️</button>
-          </>
+          </div>
         }
       />
 

@@ -558,6 +558,13 @@
   display: flex;
   flex-direction: column;
   gap: 4px; /* Reduced from 6px */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(108, 156, 255, 0.4);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 

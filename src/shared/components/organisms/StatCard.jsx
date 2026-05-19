@@ -1,6 +1,10 @@
-export default function StatCard({ title, value, detail, badge }) {
+export default function StatCard({ title, value, detail, badge, onClick }) {
   return (
-    <div className="stat-card fade-up">
+    <div 
+      className={`stat-card fade-up ${onClick ? 'interactive-card' : ''}`} 
+      onClick={onClick}
+      style={onClick ? { cursor: 'pointer' } : undefined}
+    >
       <div className="stat-card-top">
         <span className="stat-card-title">{title}</span>
         {badge && <span className="stat-card-badge">{badge}</span>}

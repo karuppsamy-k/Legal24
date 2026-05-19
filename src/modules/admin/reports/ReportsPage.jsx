@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useOutletContext, useNavigate, useLocation } from 'react-router-dom'
 import '../dashboard/dashboard.css'
 import { useAuth } from '../../../core/context/AuthContext'
@@ -56,6 +56,17 @@ export default function ReportsPage() {
   const [selectedCard, setSelectedCard] = useState(() => {
     return location.state?.selectedCard || null;
   });
+  const [instantRequests, setInstantRequests] = useState([]);
+  
+  useEffect(() => {
+    const fetchInstantRequests = () => {
+      const stored = JSON.parse(localStorage.getItem('legal24_instant_requests') || '[]');
+      setInstantRequests(stored);
+    };
+    fetchInstantRequests();
+    const interval = setInterval(fetchInstantRequests, 2000);
+    return () => clearInterval(interval);
+  }, []);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -190,6 +201,29 @@ export default function ReportsPage() {
               </div>
               <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Under review</div>
             </div>
+
+            {/* Instant Consultations Card */}
+            <div 
+              onClick={() => handleCardClick('instant')}
+              style={{ 
+                padding: '26px', 
+                borderRadius: '12px', 
+                background: selectedCard === 'instant' ? 'rgba(239, 68, 68, 0.15)' : 'var(--bg-panel)', 
+                border: selectedCard === 'instant' ? '2px solid #ef4444' : '1px solid var(--border-color)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: selectedCard === 'instant' ? '0 4px 20px rgba(239, 68, 68, 0.15)' : 'none'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: '600' }}>Instant Consults</span>
+                <span style={{ padding: '4px 8px', background: 'rgba(239, 68, 68, 0.16)', color: '#ef4444', borderRadius: '4px', fontSize: '12px', fontWeight: '600' }}>Urgent</span>
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px' }}>
+                {instantRequests.length}
+              </div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{instantRequests.filter(r => r.status === 'Pending').length} Pending</div>
+            </div>
           </div>
         </section>
 
@@ -226,34 +260,65 @@ export default function ReportsPage() {
 
             {selectedCard ? (
               <>
-                <div className="reports-table">
-                  <div className="table-row header">
-                    <span className="col-id" style={{ color: 'var(--text-heading)' }}>Case ID</span>
-                    <span className="col-title" style={{ color: 'var(--text-heading)' }}>Case Title</span>
-                    <span className="col-client" style={{ color: 'var(--text-heading)' }}>Client</span>
-                    <span className="col-advocate" style={{ color: 'var(--text-heading)' }}>Advocate</span>
-                    <span className="col-status" style={{ color: 'var(--text-heading)' }}>Status</span>
-                  </div>
-                  {paginatedCases.length > 0 ? (
-                    paginatedCases.map((c) => (
-                      <div key={c.caseId} className="table-row">
-                        <span data-label="Case ID" className="col-id" style={{ fontWeight: '600', color: 'var(--accent-blue)' }}>{c.caseId}</span>
-                        <span data-label="Case Title" className="col-title" style={{ color: 'var(--text-primary)' }}>{c.title}</span>
-                        <span data-label="Client" className="col-client" style={{ color: 'var(--text-secondary)' }}>{getClientName(c.clientId)}</span>
-                        <span data-label="Advocate" className="col-advocate" style={{ color: 'var(--text-secondary)' }}>{getAdvocateName(c.advocateId)}</span>
-                        <span data-label="Status" className="col-status">
-                          <span className={`status-pill ${c.status === CASE_STATUS.COMPLETED ? 'completed' : c.status === CASE_STATUS.PENDING ? 'pending-response' : 'in-progress'}`}>
-                            {c.status}
-                          </span>
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                      No cases match this filter.
+                {selectedCard === 'instant' ? (
+                  <div className="reports-table">
+                    <div className="table-row header">
+                      <span className="col-id" style={{ color: 'var(--text-heading)' }}>Request ID</span>
+                      <span className="col-title" style={{ color: 'var(--text-heading)' }}>Mobile Number</span>
+                      <span className="col-client" style={{ color: 'var(--text-heading)' }}>Date</span>
+                      <span className="col-advocate" style={{ color: 'var(--text-heading)' }}>Handled By</span>
+                      <span className="col-status" style={{ color: 'var(--text-heading)' }}>Status</span>
                     </div>
-                  )}
-                </div>
+                    {instantRequests.length > 0 ? (
+                      instantRequests.map((req) => (
+                        <div key={req.id} className="table-row">
+                          <span data-label="Request ID" className="col-id" style={{ fontWeight: '600', color: 'var(--accent-blue)' }}>{req.id}</span>
+                          <span data-label="Mobile Number" className="col-title" style={{ color: 'var(--text-primary)' }}>{req.mobile}</span>
+                          <span data-label="Date" className="col-client" style={{ color: 'var(--text-secondary)' }}>{req.date}</span>
+                          <span data-label="Handled By" className="col-advocate" style={{ color: 'var(--text-secondary)' }}>{req.handledBy || 'Unassigned'}</span>
+                          <span data-label="Status" className="col-status">
+                            <span className={`status-pill ${req.status === 'Confirmed' ? 'accepted' : req.status === 'Completed' ? 'completed' : 'pending'}`}>
+                              {req.status}
+                            </span>
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                        No instant consultation requests found.
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="reports-table">
+                    <div className="table-row header">
+                      <span className="col-id" style={{ color: 'var(--text-heading)' }}>Case ID</span>
+                      <span className="col-title" style={{ color: 'var(--text-heading)' }}>Case Title</span>
+                      <span className="col-client" style={{ color: 'var(--text-heading)' }}>Client</span>
+                      <span className="col-advocate" style={{ color: 'var(--text-heading)' }}>Advocate</span>
+                      <span className="col-status" style={{ color: 'var(--text-heading)' }}>Status</span>
+                    </div>
+                    {paginatedCases.length > 0 ? (
+                      paginatedCases.map((c) => (
+                        <div key={c.caseId} className="table-row">
+                          <span data-label="Case ID" className="col-id" style={{ fontWeight: '600', color: 'var(--accent-blue)' }}>{c.caseId}</span>
+                          <span data-label="Case Title" className="col-title" style={{ color: 'var(--text-primary)' }}>{c.title}</span>
+                          <span data-label="Client" className="col-client" style={{ color: 'var(--text-secondary)' }}>{getClientName(c.clientId)}</span>
+                          <span data-label="Advocate" className="col-advocate" style={{ color: 'var(--text-secondary)' }}>{getAdvocateName(c.advocateId)}</span>
+                          <span data-label="Status" className="col-status">
+                            <span className={`status-pill ${c.status === CASE_STATUS.COMPLETED ? 'completed' : c.status === CASE_STATUS.PENDING ? 'pending-response' : 'in-progress'}`}>
+                              {c.status}
+                            </span>
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                        No cases match this filter.
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
@@ -297,8 +362,35 @@ export default function ReportsPage() {
                 )}
               </>
             ) : (
-              <div style={{ padding: '24px', color: 'var(--text-muted)', textAlign: 'center', minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div>📊 Chart will display here with real-time case metrics</div>
+              <div style={{ padding: '24px', minHeight: '300px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Overview Statistics</h3>
+                <div style={{ display: 'flex', alignItems: 'flex-end', height: '220px', gap: '8%', marginTop: 'auto', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', justifyContent: 'center' }}>
+                  
+                  {/* Bar 1: Active Cases */}
+                  <div style={{ flex: '0 1 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+                    <div style={{ width: '100%', height: `${Math.max(5, (ALL_MOCK_REPORT_CASES.filter(c => c.status === CASE_STATUS.ACTIVE || c.status === CASE_STATUS.HEARING).length / ALL_MOCK_REPORT_CASES.length) * 100)}%`, background: '#c084fc', borderRadius: '4px 4px 0 0', transition: 'height 0.5s' }} />
+                    <span style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>Active</span>
+                  </div>
+
+                  {/* Bar 2: Resolved Cases */}
+                  <div style={{ flex: '0 1 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+                    <div style={{ width: '100%', height: `${Math.max(5, (ALL_MOCK_REPORT_CASES.filter(c => c.status === CASE_STATUS.COMPLETED).length / ALL_MOCK_REPORT_CASES.length) * 100)}%`, background: theme === 'light' ? '#059669' : '#4ce1b1', borderRadius: '4px 4px 0 0', transition: 'height 0.5s' }} />
+                    <span style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>Resolved</span>
+                  </div>
+
+                  {/* Bar 3: Pending Cases */}
+                  <div style={{ flex: '0 1 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+                    <div style={{ width: '100%', height: `${Math.max(5, (ALL_MOCK_REPORT_CASES.filter(c => c.status === CASE_STATUS.PENDING).length / ALL_MOCK_REPORT_CASES.length) * 100)}%`, background: theme === 'light' ? '#d97706' : '#ffd68a', borderRadius: '4px 4px 0 0', transition: 'height 0.5s' }} />
+                    <span style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>Pending</span>
+                  </div>
+
+                  {/* Bar 4: Instant Consults */}
+                  <div style={{ flex: '0 1 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+                    <div style={{ width: '100%', height: `${Math.max(5, Math.min(100, (instantRequests.length / 20) * 100))}%`, background: '#ef4444', borderRadius: '4px 4px 0 0', transition: 'height 0.5s' }} />
+                    <span style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>Instant</span>
+                  </div>
+
+                </div>
               </div>
             )}
           </article>
