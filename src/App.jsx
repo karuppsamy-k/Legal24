@@ -21,8 +21,11 @@ import ProfilePage from './modules/public/profile/ProfilePage'
 import AdvocateDashboardPage from './modules/advocate/dashboard/AdvocateDashboardPage'
 import AdvocateCasesPage from './modules/advocate/cases/AdvocateCasesPage'
 import AdvocateHearingsPage from './modules/advocate/hearings/AdvocateHearingsPage'
+import AdvocateConsultationsPage from './modules/advocate/consultations/AdvocateConsultationsPage'
+import AdvocateInstantConsultationsPage from './modules/advocate/consultations/AdvocateInstantConsultationsPage'
 import AdvocateDocumentsPage from './modules/advocate/documents/AdvocateDocumentsPage'
 import AdvocateMessagesPage from './modules/advocate/messages/AdvocateMessagesPage'
+import AdvocatePaymentsPage from './modules/advocate/payments/AdvocatePaymentsPage'
 import ClientDashboardPage from './modules/client/dashboard/ClientDashboardPage'
 import ClientConsultationsPage from './modules/client/consultations/ClientConsultationsPage'
 import ClientCaseTrackingPage from './modules/client/cases/ClientCaseTrackingPage'
@@ -69,8 +72,11 @@ function App() {
                   <Route path="/advocate-dashboard" element={<AdvocateDashboardPage />} />
                   <Route path="/advocate-cases" element={<AdvocateCasesPage />} />
                   <Route path="/advocate-hearings" element={<AdvocateHearingsPage />} />
+                  <Route path="/advocate-consultations" element={<AdvocateConsultationsPage />} />
+                  <Route path="/advocate-instant-consults" element={<AdvocateInstantConsultationsPage />} />
                   <Route path="/advocate-documents" element={<AdvocateDocumentsPage />} />
                   <Route path="/advocate-messages" element={<AdvocateMessagesPage />} />
+                  <Route path="/advocate-payments" element={<AdvocatePaymentsPage />} />
                   <Route path="/advocate-profile" element={<ProfilePage />} />
                 </Route>
               </Route>

@@ -16,7 +16,8 @@ import {
   FileText,
   LogOut,
   Bell,
-  Settings
+  Settings,
+  ArrowLeft
 } from 'lucide-react'
 import TopBar from '../../../shared/components/organisms/TopBar'
 import './advocate_messages.css'
@@ -50,10 +51,31 @@ export default function AdvocateMessagesPage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleNavClick = (id) => {
-    setSidebarOpen(false)
-    navigate(`/${id}`)
-  }
+  const [activeChatId, setActiveChatId] = useState(1)
+  const [viewingChatMobile, setViewingChatMobile] = useState(false)
+  const [typedMessage, setTypedMessage] = useState('')
+  const [chatMessages, setChatMessages] = useState(MOCK_MESSAGES)
+
+  const activeChat = MOCK_CHATS.find(c => c.id === activeChatId) || MOCK_CHATS[0]
+
+  const handleSendMessage = (e) => {
+    if (e) e.preventDefault();
+    if (!typedMessage.trim()) return;
+    
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    setChatMessages(prev => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        text: typedMessage,
+        sent: true,
+        time: timeStr
+      }
+    ]);
+    setTypedMessage('');
+  };
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
@@ -76,58 +98,78 @@ export default function AdvocateMessagesPage() {
         }
       />
 
-        <div className="messages-shell fade-up">
-          <section className="chat-list">
-            <div className="chat-list-header">
-              <div className="search-bar" style={{ width: '100%' }}>
-                <Search size={16} />
-                <input type="text" placeholder="Search chats..." />
+      <div className={`messages-shell fade-up ${viewingChatMobile ? 'mobile-show-view' : 'mobile-show-list'}`}>
+        <section className="chat-list">
+          <div className="chat-list-header">
+            <div className="search-bar" style={{ width: '100%' }}>
+              <Search size={16} />
+              <input type="text" placeholder="Search chats..." />
+            </div>
+          </div>
+          <div className="chat-list-items">
+            {MOCK_CHATS.map(chat => (
+              <div 
+                key={chat.id} 
+                className={`chat-item ${chat.id === activeChatId ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveChatId(chat.id);
+                  setViewingChatMobile(true);
+                }}
+              >
+                <div className="chat-avatar">{chat.name[0]}</div>
+                <div className="chat-info">
+                  <h4>{chat.name} <span className="chat-time">{chat.time}</span></h4>
+                  <p>{chat.id === activeChatId && chatMessages.length > 0 ? chatMessages[chatMessages.length - 1].text : chat.lastMsg}</p>
+                </div>
+                {chat.unread > 0 && chat.id !== activeChatId && <span className="unread-badge">{chat.unread}</span>}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="chat-view">
+          <div className="chat-view-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button 
+                type="button" 
+                className="chat-back-btn" 
+                onClick={() => setViewingChatMobile(false)}
+                title="Back to Chats"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="chat-avatar" style={{ width: '40px', height: '40px' }}>{activeChat.name[0]}</div>
+              <div>
+                <h4 style={{ margin: 0, color: '#fff' }}>{activeChat.name}</h4>
+                <span className="online-indicator">Online</span>
               </div>
             </div>
-            <div className="chat-list-items">
-              {MOCK_CHATS.map(chat => (
-                <div key={chat.id} className={`chat-item ${chat.id === 1 ? 'active' : ''}`}>
-                  <div className="chat-avatar">{chat.name[0]}</div>
-                  <div className="chat-info">
-                    <h4>{chat.name} <span className="chat-time">{chat.time}</span></h4>
-                    <p>{chat.lastMsg}</p>
-                  </div>
-                  {chat.unread > 0 && <span className="unread-badge">{chat.unread}</span>}
-                </div>
-              ))}
-            </div>
-          </section>
+            <button className="icon-only"><MoreVertical size={20} /></button>
+          </div>
 
-          <section className="chat-view">
-            <div className="chat-view-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div className="chat-avatar" style={{ width: '40px', height: '40px' }}>A</div>
-                <div>
-                  <h4 style={{ margin: 0, color: '#fff' }}>Amit Kumar</h4>
-                  <span style={{ fontSize: '12px', color: '#4ce1b1' }}>Online</span>
-                </div>
+          <div className="chat-messages">
+            {chatMessages.map(msg => (
+              <div key={msg.id} className={`message-bubble ${msg.sent ? 'sent' : 'received'}`}>
+                <div className="message-text">{msg.text}</div>
+                <div className="message-time">{msg.time}</div>
               </div>
-              <button className="icon-only"><MoreVertical size={20} /></button>
-            </div>
+            ))}
+          </div>
 
-            <div className="chat-messages">
-              {MOCK_MESSAGES.map(msg => (
-                <div key={msg.id} className={`message-bubble ${msg.sent ? 'sent' : 'received'}`}>
-                  {msg.text}
-                  <div style={{ fontSize: '10px', marginTop: '4px', opacity: 0.7, textAlign: 'right' }}>{msg.time}</div>
-                </div>
-              ))}
+          <form onSubmit={handleSendMessage} className="chat-input-area">
+            <button type="button" className="icon-only" style={{ color: '#94a3b8' }}><Paperclip size={20} /></button>
+            <div className="chat-input-wrapper">
+              <input 
+                type="text" 
+                placeholder="Type a message" 
+                value={typedMessage}
+                onChange={e => setTypedMessage(e.target.value)}
+              />
             </div>
-
-            <div className="chat-input-area">
-              <button className="icon-only" style={{ color: '#94a3b8' }}><Paperclip size={20} /></button>
-              <div className="chat-input-wrapper">
-                <input type="text" placeholder="Type your message here..." />
-              </div>
-              <button className="send-btn"><Send size={18} /></button>
-            </div>
-          </section>
-        </div>
+            <button type="submit" className="send-btn"><Send size={18} /></button>
+          </form>
+        </section>
+      </div>
     </>
   )
 }

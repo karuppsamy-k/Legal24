@@ -267,7 +267,8 @@
 
 .case-item:hover {
   background: var(--bg-panel);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(108, 156, 255, 0.3) !important;
+  transform: translateX(4px);
 }
 
 .case-info h4 {
@@ -296,6 +297,13 @@
   background: var(--bg-panel);
   margin-bottom: 12px;
   border-left: 3px solid #6c9cff;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hearing-card:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(108, 156, 255, 0.3) !important;
 }
 
 .hearing-time {

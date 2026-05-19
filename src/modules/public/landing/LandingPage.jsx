@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Users, CheckCircle, ArrowRight, MessageSquare, PhoneCall, Star, Globe, MessageCircle, AtSign, Send, Mail, MapPin, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../../core/context/ThemeContext';
@@ -7,6 +7,30 @@ import './landing.css';
 
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
+  const [isInstantModalOpen, setIsInstantModalOpen] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState('');
+
+  const handleInstantSubmit = (e) => {
+    e.preventDefault();
+    if (!mobileNumber || mobileNumber.length < 5) {
+      alert('Please enter a valid mobile number.');
+      return;
+    }
+    
+    const instantRequests = JSON.parse(localStorage.getItem('legal24_instant_requests') || '[]');
+    const newInstant = {
+      id: 'INST-' + Math.floor(1000 + Math.random() * 9000),
+      mobile: mobileNumber,
+      date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      status: 'Pending',
+      handledBy: null
+    };
+    
+    localStorage.setItem('legal24_instant_requests', JSON.stringify([newInstant, ...instantRequests]));
+    alert('Your Instant Consultation request has been broadcasted to all available advocates! They will contact you shortly.');
+    setIsInstantModalOpen(false);
+    setMobileNumber('');
+  };
 
   return (
     <div className="landing-wrapper">
@@ -49,8 +73,12 @@ export default function LandingPage() {
             <Link to="/signup" className="btn-primary">
               Create an account <ArrowRight size={20} />
             </Link>
+            <button className="btn-secondary" onClick={() => setIsInstantModalOpen(true)} style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.4)', background: 'rgba(251, 191, 36, 0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <PhoneCall size={18} style={{ marginRight: '8px' }} />
+              Instant Consult
+            </button>
             <Link to="/login" className="btn-secondary">
-              Login to workspace
+              Login
             </Link>
           </div>
 
@@ -236,6 +264,42 @@ export default function LandingPage() {
 
       {/* Static Rule-Based Chatbot */}
       <ChatBot />
+
+      {/* Instant Consultation Modal */}
+      {isInstantModalOpen && (
+        <div className="modal-backdrop" style={{ zIndex: 9999 }}>
+          <div className="modal-content" style={{ maxWidth: '400px', background: 'var(--bg-panel)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div className="modal-header">
+              <h2 style={{ color: '#fff', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <PhoneCall size={20} color="#fbbf24" /> Instant Consult
+              </h2>
+              <button className="close-btn" onClick={() => setIsInstantModalOpen(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '24px', cursor: 'pointer' }}>×</button>
+            </div>
+            <div style={{ padding: '16px 0', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.5' }}>
+              Need urgent legal advice? Enter your mobile number below and available advocates will contact you immediately. No account required.
+            </div>
+            <form onSubmit={handleInstantSubmit} className="modal-form">
+              <div className="form-group" style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', color: '#94a3b8', fontSize: '13px' }}>Mobile Number</label>
+                <input 
+                  type="tel" 
+                  value={mobileNumber} 
+                  onChange={(e) => setMobileNumber(e.target.value)} 
+                  placeholder="+91 98765 43210" 
+                  required 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', fontSize: '15px' }}
+                />
+              </div>
+              <div className="modal-actions" style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button type="button" onClick={() => setIsInstantModalOpen(false)} style={{ padding: '10px 16px', background: 'transparent', color: '#94a3b8', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Cancel</button>
+                <button type="submit" style={{ padding: '10px 20px', background: '#fbbf24', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  Request Now
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
