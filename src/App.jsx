@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css'
 import { AuthProvider, useAuth } from './core/context/AuthContext'
 import { ThemeProvider } from './core/context/ThemeContext'
+import { NotificationProvider } from './core/context/NotificationContext'
 import { AdminRoute, AdvocateRoute, ClientRoute, PublicRoute } from './core/routes/ProtectedRoutes'
 
 // Pages
@@ -15,6 +16,8 @@ import UsersPage from './features/users/UsersPage'
 import AdvocatesPage from './features/advocates/AdvocatesPage'
 import ReportsPage from './features/reports/ReportsPage'
 import FeedbacksPage from './features/feedbacks/FeedbacksPage'
+import SettingsPage from './features/settings/SettingsPage'
+import ProfilePage from './features/profile/ProfilePage'
 import AdvocateDashboardPage from './features/advocate_dashboard/AdvocateDashboardPage'
 import AdvocateCasesPage from './features/advocate_cases/AdvocateCasesPage'
 import AdvocateHearingsPage from './features/advocate_hearings/AdvocateHearingsPage'
@@ -35,54 +38,60 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Public Routes */}
-            <Route element={<PublicRoute />}>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            </Route>
-
-            {/* Admin Protected Routes */}
-            <Route element={<AdminRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route path="/admin-dashboard" element={<DashboardPage />} />
-                <Route path="/approval" element={<ApprovalPage />} />
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="/advocates" element={<AdvocatesPage />} />
-                <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/feedbacks" element={<FeedbacksPage />} />
+        <NotificationProvider>
+          <Router>
+            <Routes>
+              {/* Public Routes */}
+              <Route element={<PublicRoute />}>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               </Route>
-            </Route>
 
-            {/* Advocate Protected Routes */}
-            <Route element={<AdvocateRoute />}>
-              <Route element={<AdvocateLayout />}>
-                <Route path="/advocate-dashboard" element={<AdvocateDashboardPage />} />
-                <Route path="/advocate-cases" element={<AdvocateCasesPage />} />
-                <Route path="/advocate-hearings" element={<AdvocateHearingsPage />} />
-                <Route path="/advocate-documents" element={<AdvocateDocumentsPage />} />
-                <Route path="/advocate-messages" element={<AdvocateMessagesPage />} />
+              {/* Admin Protected Routes */}
+              <Route element={<AdminRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route path="/admin-dashboard" element={<DashboardPage />} />
+                  <Route path="/approval" element={<ApprovalPage />} />
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/advocates" element={<AdvocatesPage />} />
+                  <Route path="/reports" element={<ReportsPage />} />
+                  <Route path="/feedbacks" element={<FeedbacksPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/admin-profile" element={<ProfilePage />} />
+                </Route>
               </Route>
-            </Route>
 
-            {/* Client Protected Routes */}
-            <Route element={<ClientRoute />}>
-              <Route element={<ClientLayout />}>
-                <Route path="/client-dashboard" element={<ClientDashboardPage />} />
-                <Route path="/client-consultations" element={<ClientConsultationsPage />} />
-                <Route path="/client-cases" element={<ClientCaseTrackingPage />} />
-                <Route path="/client-documents" element={<ClientDocumentsPage />} />
-                <Route path="/client-payments" element={<ClientPaymentsPage />} />
+              {/* Advocate Protected Routes */}
+              <Route element={<AdvocateRoute />}>
+                <Route element={<AdvocateLayout />}>
+                  <Route path="/advocate-dashboard" element={<AdvocateDashboardPage />} />
+                  <Route path="/advocate-cases" element={<AdvocateCasesPage />} />
+                  <Route path="/advocate-hearings" element={<AdvocateHearingsPage />} />
+                  <Route path="/advocate-documents" element={<AdvocateDocumentsPage />} />
+                  <Route path="/advocate-messages" element={<AdvocateMessagesPage />} />
+                  <Route path="/advocate-profile" element={<ProfilePage />} />
+                </Route>
               </Route>
-            </Route>
 
-            {/* Redirects */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
+              {/* Client Protected Routes */}
+              <Route element={<ClientRoute />}>
+                <Route element={<ClientLayout />}>
+                  <Route path="/client-dashboard" element={<ClientDashboardPage />} />
+                  <Route path="/client-consultations" element={<ClientConsultationsPage />} />
+                  <Route path="/client-cases" element={<ClientCaseTrackingPage />} />
+                  <Route path="/client-documents" element={<ClientDocumentsPage />} />
+                  <Route path="/client-payments" element={<ClientPaymentsPage />} />
+                  <Route path="/client-profile" element={<ProfilePage />} />
+                </Route>
+              </Route>
+
+              {/* Redirects */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
   )

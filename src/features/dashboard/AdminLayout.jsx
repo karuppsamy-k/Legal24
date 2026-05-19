@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../core/context/AuthContext'
 import Sidebar from '../../shared/components/organisms/Sidebar'
-import { LayoutDashboard, ShieldCheck, Users, Briefcase, BarChart3, MessageCircle } from 'lucide-react'
+import NotificationDrawer from '../../shared/components/organisms/NotificationDrawer'
+import { LayoutDashboard, ShieldCheck, Users, Briefcase, BarChart3, MessageCircle, Settings } from 'lucide-react'
 import '../dashboard/dashboard.css'
 
 const navItems = [
@@ -12,6 +13,7 @@ const navItems = [
   { label: 'Manage Advocates', id: 'advocates', icon: <Briefcase size={18} /> },
   { label: 'Reports & Analytics', id: 'reports', icon: <BarChart3 size={18} /> },
   { label: 'Feed Backs', id: 'feedbacks', icon: <MessageCircle size={18} /> },
+  { label: 'Settings', id: 'settings', icon: <Settings size={18} /> },
 ]
 
 export default function AdminLayout() {
@@ -49,6 +51,8 @@ export default function AdminLayout() {
       <main className="dashboard-main">
         <Outlet context={{ setSidebarOpen, sidebarOpen }} />
       </main>
+
+      <NotificationDrawer />
     </div>
   )
 }

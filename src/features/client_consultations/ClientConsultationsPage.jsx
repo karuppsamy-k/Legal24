@@ -44,6 +44,21 @@ export default function ClientConsultationsPage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
+  const [expertsList] = useState(() => {
+    const dynamicAdvocates = JSON.parse(localStorage.getItem('legal24_advocates') || '[]');
+    const approvedDynamic = dynamicAdvocates
+      .filter(a => a.status === 'approved')
+      .map(a => ({
+        id: a.id,
+        name: `Adv. ${a.name}`,
+        specialty: a.specialization,
+        experience: a.experience,
+        rating: 5.0,
+        price: "₹1,500/hr"
+      }));
+    return [...approvedDynamic, ...EXPERTS];
+  });
+
   const handleNavClick = (id) => {
     setSidebarOpen(false)
     navigate(`/${id}`)
@@ -73,7 +88,7 @@ export default function ClientConsultationsPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {EXPERTS.map((expert, idx) => (
+              {expertsList.map((expert, idx) => (
                 <div key={expert.id} className="expert-card fade-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                   <div className="expert-header">
                     <div className="expert-avatar">{expert.name[5]}</div>

@@ -472,3 +472,63 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
+
+/* Pending Verification Styles */
+.pending-verification-banner {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 153, 0, 0.08);
+  border: 1px solid rgba(255, 153, 0, 0.2);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.pending-verification-banner .banner-icon {
+  color: #ffd68a;
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pending-verification-banner h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffd68a;
+}
+
+.pending-verification-banner p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.empty-dashboard-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  gap: 12px;
+}
+
+.empty-dashboard-placeholder .placeholder-icon {
+  color: var(--border-color);
+  opacity: 0.5;
+}
+
+.empty-dashboard-placeholder p {
+  font-size: 14px;
+  margin: 0;
+  max-width: 280px;
+}

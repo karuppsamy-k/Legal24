@@ -137,7 +137,7 @@
 
 .chat-msg.user {
   background: linear-gradient(135deg, #6c9cff 0%, #4f82ed 100%);
-  color: var(--text-primary);
+  color: #ffffff;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
 }
@@ -203,4 +203,44 @@
   .chatbot-wrapper.open::before {
     display: none;
   }
+}
+
+/* ── Light Theme Overrides ── */
+:root[data-theme='light'] .chatbot-window {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.04) inset;
+}
+
+:root[data-theme='light'] .chatbot-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme='light'] .chatbot-messages::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='light'] .chat-msg.bot {
+  background: rgba(0, 0, 0, 0.05);
+  color: #0f172a;
+}
+
+:root[data-theme='light'] .chat-option-btn {
+  background: rgba(79, 70, 229, 0.06);
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  color: var(--accent-blue);
+}
+
+:root[data-theme='light'] .chat-option-btn:hover {
+  background: rgba(79, 70, 229, 0.12);
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+:root[data-theme='light'] .chat-input-area {
+  background: rgba(0, 0, 0, 0.02);
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+.chatbot-icon {
+  color: var(--accent-blue);
 }

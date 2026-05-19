@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { User, Mail, Phone, Lock, CheckCircle2, Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Mail, Phone, Lock, CheckCircle2, Sun, Moon, Briefcase, Award, Building, BookOpen } from 'lucide-react';
 import { useAuth } from '../../core/context/AuthContext';
 import { useTheme } from '../../core/context/ThemeContext';
 import './auth.css';
@@ -13,7 +13,11 @@ const SignupPage = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: 'client'
+    role: 'client',
+    barCouncilId: '',
+    specialization: 'Criminal Defense',
+    experience: '',
+    practiceCourts: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -148,6 +152,87 @@ const SignupPage = () => {
               />
             </div>
           </div>
+
+          {/* Advocate Specific Verification Fields */}
+          <AnimatePresence>
+            {formData.role === 'advocate' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}
+              >
+                <div className="form-group">
+                  <label>Bar Council Enrollment ID</label>
+                  <div className="input-container">
+                    <Award className="input-icon" size={20} />
+                    <input 
+                      type="text" 
+                      className="auth-input" 
+                      placeholder="e.g. MAH/1024/2018"
+                      value={formData.barCouncilId}
+                      onChange={(e) => setFormData({...formData, barCouncilId: e.target.value})}
+                      required={formData.role === 'advocate'}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Primary Specialization</label>
+                  <div className="input-container">
+                    <Briefcase className="input-icon" size={20} />
+                    <select 
+                      className="auth-input"
+                      value={formData.specialization}
+                      onChange={(e) => setFormData({...formData, specialization: e.target.value})}
+                      required={formData.role === 'advocate'}
+                    >
+                      <option value="Criminal Defense">Criminal Defense</option>
+                      <option value="Civil Litigation">Civil Litigation</option>
+                      <option value="Corporate Law">Corporate & Business Law</option>
+                      <option value="Family & Divorce">Family & Divorce Law</option>
+                      <option value="Property & Real Estate">Property & Real Estate</option>
+                      <option value="Labour & Employment">Labour & Employment</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div className="form-group">
+                    <label>Experience (Years)</label>
+                    <div className="input-container">
+                      <BookOpen className="input-icon" size={18} />
+                      <input 
+                        type="number" 
+                        className="auth-input" 
+                        placeholder="e.g. 5"
+                        min="0"
+                        max="60"
+                        value={formData.experience}
+                        onChange={(e) => setFormData({...formData, experience: e.target.value})}
+                        required={formData.role === 'advocate'}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Practice Courts</label>
+                    <div className="input-container">
+                      <Building className="input-icon" size={18} />
+                      <input 
+                        type="text" 
+                        className="auth-input" 
+                        placeholder="e.g. High Court"
+                        value={formData.practiceCourts}
+                        onChange={(e) => setFormData({...formData, practiceCourts: e.target.value})}
+                        required={formData.role === 'advocate'}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div className="form-group">

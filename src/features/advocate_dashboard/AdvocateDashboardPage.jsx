@@ -13,7 +13,8 @@ import {
   Plus,
   Bell,
   Settings,
-  User
+  User,
+  ShieldAlert
 } from 'lucide-react'
 import StatCard from '../../shared/components/organisms/StatCard.jsx'
 import './advocate_dashboard.css'
@@ -37,29 +38,26 @@ const RECENT_CASES = [
   { id: 'C-198', name: "Employment Contract Review", status: "Completed", client: "Sarah J.", date: "12 May 2026" }
 ]
 
-const navItems = [
-  { label: 'Dashboard', id: 'advocate-dashboard', icon: <Clock size={18} />, active: true },
-  { label: 'My Cases', id: 'advocate-cases', icon: <Briefcase size={18} /> },
-  { label: 'Hearings', id: 'advocate-hearings', icon: <Calendar size={18} /> },
-  { label: 'Documents', id: 'advocate-documents', icon: <FileText size={18} /> },
-  { label: 'Communication', id: 'advocate-messages', icon: <MessageSquare size={18} /> }
-]
-
 export default function AdvocateDashboardPage() {
   const { sidebarOpen, setSidebarOpen } = useOutletContext()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
-  const handleNavClick = (id) => {
-    setSidebarOpen(false)
-    navigate(`/${id}`)
-  }
+  // Dynamic user status from localStorage to sync immediately when approved by admin
+  const registeredUsers = JSON.parse(localStorage.getItem('legal24_users') || '[]');
+  const dbUser = registeredUsers.find(u => u.email === user?.email);
+  const status = dbUser ? dbUser.status : (user?.status || 'approved');
+  const isPending = status === 'pending';
 
-  const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      logout()
-    }
-  }
+  const stats = isPending ? [
+    { title: "Active Cases", value: "0", detail: "Verification pending", badge: "Inactive" },
+    { title: "Upcoming Hearings", value: "0", detail: "Verification pending", badge: "Inactive" },
+    { title: "Client Messages", value: "0", detail: "Verification pending", badge: "Inactive" },
+    { title: "Total Billings", value: "₹0", detail: "Verification pending", badge: "0%" }
+  ] : MOCK_STATS;
+
+  const cases = isPending ? [] : RECENT_CASES;
+  const hearings = isPending ? [] : UPCOMING_HEARINGS;
 
   return (
     <>
@@ -70,8 +68,21 @@ export default function AdvocateDashboardPage() {
         onMenuClick={() => setSidebarOpen(true)}
       />
 
+      {isPending && (
+        <div className="pending-verification-banner fade-up" style={{ animationDelay: '0.05s' }}>
+          <ShieldAlert size={28} className="banner-icon" />
+          <div className="banner-content">
+            <h3>Account Verification Pending</h3>
+            <p>
+              Your professional credentials are currently being reviewed by the Legal24 administration. 
+              Until approved, you will not receive consultation requests, and your profile remains hidden from the client index.
+            </p>
+          </div>
+        </div>
+      )}
+
       <section className="advocate-stats-row fade-up">
-        {MOCK_STATS.map((stat, idx) => (
+        {stats.map((stat, idx) => (
           <StatCard key={idx} {...stat} />
         ))}
       </section>
@@ -83,23 +94,32 @@ export default function AdvocateDashboardPage() {
           </div>
           
           <div className="cases-list">
-            {RECENT_CASES.map((item) => (
-              <div key={item.id} className="case-item fade-up">
-                <div className="case-info">
-                  <h4>{item.name}</h4>
-                  <span>{item.client} • {item.date}</span>
+            {cases.length > 0 ? (
+              cases.map((item) => (
+                <div key={item.id} className="case-item fade-up">
+                  <div className="case-info">
+                    <h4>{item.name}</h4>
+                    <span>{item.client} • {item.date}</span>
+                  </div>
+                  <div className="case-actions">
+                    <span className="status-pill">{item.status}</span>
+                    <button className="icon-only"><ChevronRight size={16} /></button>
+                  </div>
                 </div>
-                <div className="case-actions">
-                  <span className="status-pill">{item.status}</span>
-                  <button className="icon-only"><ChevronRight size={16} /></button>
-                </div>
+              ))
+            ) : (
+              <div className="empty-dashboard-placeholder">
+                <Briefcase size={40} className="placeholder-icon" />
+                <p>No cases assigned. Your dashboard is empty because you are a new applicant under review.</p>
               </div>
-            ))}
+            )}
           </div>
           
-          <button className="add-case-btn" onClick={() => navigate('/advocate-cases')}>
-            <Plus size={18} /> Add New Case
-          </button>
+          {!isPending && (
+            <button className="add-case-btn" onClick={() => navigate('/advocate-cases')}>
+              <Plus size={18} /> Add New Case
+            </button>
+          )}
         </div>
 
         <aside className="advocate-panel fade-up delay-2">
@@ -107,19 +127,28 @@ export default function AdvocateDashboardPage() {
             <h2>Hearings</h2>
           </div>
           <div className="hearings-list">
-            {UPCOMING_HEARINGS.map((hearing) => (
-              <div key={hearing.id} className="hearing-card">
-                <div className="hearing-time">{hearing.time}</div>
-                <div className="hearing-details">
-                  <strong>{hearing.case}</strong>
-                  <span>{hearing.court} • {hearing.date}</span>
+            {hearings.length > 0 ? (
+              hearings.map((hearing) => (
+                <div key={hearing.id} className="hearing-card">
+                  <div className="hearing-time">{hearing.time}</div>
+                  <div className="hearing-details">
+                    <strong>{hearing.case}</strong>
+                    <span>{hearing.court} • {hearing.date}</span>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="empty-dashboard-placeholder">
+                <Calendar size={40} className="placeholder-icon" />
+                <p>No upcoming court hearings scheduled.</p>
               </div>
-            ))}
+            )}
           </div>
-          <button className="view-calendar-btn" onClick={() => navigate('/advocate-hearings')}>
-            Full Calendar
-          </button>
+          {!isPending && (
+            <button className="view-calendar-btn" onClick={() => navigate('/advocate-hearings')}>
+              Full Calendar
+            </button>
+          )}
         </aside>
       </div>
     </>
