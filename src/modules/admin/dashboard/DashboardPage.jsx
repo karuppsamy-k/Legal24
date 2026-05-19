@@ -427,14 +427,27 @@ export default function DashboardPage() {
               <span className="dashboard-subtitle">Realtime monitoring</span>
               <h2>System Pulse</h2>
             </div>
-            <button type="button" className="summary-action">View report</button>
+            <button 
+              type="button" 
+              className="summary-action" 
+              onClick={() => navigate('/reports')}
+              style={{ cursor: 'pointer' }}
+            >
+              View report
+            </button>
           </div>
           <div className="summary-info">
-            <div>
+            <div 
+              onClick={() => navigate('/reports', { state: { selectedCard: 'active' } })}
+              className="pulse-clickable-row"
+            >
               <strong>{pulse.activeCases}</strong>
               <span>Active court cases</span>
             </div>
-            <div>
+            <div 
+              onClick={() => navigate('/approval')}
+              className="pulse-clickable-row"
+            >
               <strong>{pulse.pendingApprovals}</strong>
               <span>Pending approvals</span>
             </div>
@@ -481,41 +494,24 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="table-grid">
-            {applications.map((item) => (
-              <div key={item.name + item.date} className="table-row">
+            {applications.map((item, index) => (
+              <div key={item.name + item.date + index} className="table-row">
                 <div>
                   <strong>{item.name}</strong>
                   <span>{item.date}</span>
                 </div>
-                <button>{item.status}</button>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="panel panel-users fade-up delay-5">
-          <div className="panel-header">
-            <div>
-              <h2>Recent New Users</h2>
-              <p>User management</p>
-            </div>
-          </div>
-          <div className="table-grid">
-            {users.map((item) => (
-              <div key={item.name + item.status} className="table-row">
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.detail}</span>
-                </div>
-                <div className={`status-pill ${item.status.toLowerCase()}`}>
+                <button 
+                  onClick={() => navigate('/approval')}
+                  style={{ cursor: 'pointer' }}
+                >
                   {item.status}
-                </div>
+                </button>
               </div>
             ))}
           </div>
         </article>
 
-        <article className="panel panel-reports fade-up delay-6">
+        <article className="panel panel-reports fade-up delay-5">
           <div className="panel-header">
             <div>
               <h2>Critical Feed Backs & Reports</h2>
@@ -527,16 +523,36 @@ export default function DashboardPage() {
               <strong>Client Lee: Report of access issue</strong>
               <span>High priority</span>
               <div className="report-actions">
-                <button>Go to Reports</button>
-                <button className="outline">Resolve</button>
+                <button onClick={() => navigate('/feedbacks')} style={{ cursor: 'pointer' }}>Go to Feedbacks</button>
+                <button 
+                  className="outline"
+                  onClick={() => {
+                    const stored = localStorage.getItem('legal24_feedbacks');
+                    if (stored) {
+                      const list = JSON.parse(stored);
+                      const updated = list.map(f => f.id === 1 ? { ...f, status: 'Resolved' } : f);
+                      localStorage.setItem('legal24_feedbacks', JSON.stringify(updated));
+                    }
+                    alert('Feedback from Client Lee resolved successfully!');
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Resolve
+                </button>
               </div>
             </div>
             <div className="report-card report-warning">
               <strong>Monthly report generated</strong>
-              <span>Download</span>
+              <span>System Analytics</span>
               <div className="report-actions">
-                <button>Go to Reports</button>
-                <button className="outline">Resolve</button>
+                <button onClick={() => navigate('/reports')} style={{ cursor: 'pointer' }}>Go to Reports</button>
+                <button 
+                  className="outline"
+                  onClick={() => alert('Monthly report archived successfully!')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Resolve
+                </button>
               </div>
             </div>
           </div>

@@ -107,18 +107,20 @@ export default function ApprovalPage() {
                     </div>
                   </div>
                   <div style={{ flex: 1 }}>
-                    <span style={{ color: '#9aa6d2', fontSize: '13px' }}>Applied: {app.date}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Applied: {app.date}</span>
                   </div>
                   <div style={{ display: 'flex', gap: '12px' }}>
                     <button 
                       onClick={() => handleApprove(app)} 
-                      style={{ padding: '8px 16px', border: 'none', borderRadius: '6px', background: 'rgba(76, 225, 177, 0.16)', color: '#b9ffe5', cursor: 'pointer', fontWeight: '600' }}
+                      className="btn-approve-action"
+                      style={{ padding: '8px 16px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
                     >
                       Approve
                     </button>
                     <button 
                       onClick={() => handleReject(app)} 
-                      style={{ padding: '8px 16px', border: 'none', borderRadius: '6px', background: 'rgba(255, 87, 87, 0.16)', color: '#ff9999', cursor: 'pointer', fontWeight: '600' }}
+                      className="btn-reject-action"
+                      style={{ padding: '8px 16px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
                     >
                       Reject
                     </button>

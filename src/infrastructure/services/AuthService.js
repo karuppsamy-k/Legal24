@@ -78,6 +78,7 @@ export const AuthService = {
           phone: userData.phone,
           password: userData.password,
           role: userData.role,
+          image: userData.image || '',
           createdAt: new Date().toISOString()
         };
 
@@ -97,6 +98,8 @@ export const AuthService = {
             specialization: userData.specialization,
             experience: userData.experience + ' years',
             practiceCourts: userData.practiceCourts,
+            verificationDoc: userData.verificationDoc || '',
+            image: userData.image || '',
             status: 'pending',
             date: new Date().toLocaleDateString('en-GB')
           });

@@ -17,7 +17,9 @@ const SignupPage = () => {
     barCouncilId: '',
     specialization: 'Criminal Defense',
     experience: '',
-    practiceCourts: ''
+    practiceCourts: '',
+    verificationDoc: '',
+    image: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -228,6 +230,82 @@ const SignupPage = () => {
                         required={formData.role === 'advocate'}
                       />
                     </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Profile Image</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {formData.image && (
+                      <img 
+                        src={formData.image} 
+                        alt="Profile Preview" 
+                        style={{ width: '42px', height: '42px', borderRadius: '10px', objectFit: 'cover' }} 
+                      />
+                    )}
+                    <div className="input-container" style={{ position: 'relative', flex: 1 }}>
+                      <User className="input-icon" size={18} />
+                      <label 
+                        htmlFor="signupProfileImage"
+                        className="auth-input"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          cursor: 'pointer',
+                          color: formData.image ? '#4ce1b1' : 'var(--text-muted)'
+                        }}
+                      >
+                        {formData.image ? 'Profile Image Selected' : 'Select Photo (JPG/PNG)...'}
+                      </label>
+                      <input 
+                        id="signupProfileImage"
+                        type="file" 
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (uploadEvent) => {
+                              setFormData({ ...formData, image: uploadEvent.target.result });
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Verification Document (Bar Council Certificate / ID Proof) *</label>
+                  <div className="input-container" style={{ position: 'relative' }}>
+                    <Building className="input-icon" size={18} />
+                    <label 
+                      htmlFor="signupVerificationDoc"
+                      className="auth-input"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        color: formData.verificationDoc ? '#4ce1b1' : 'var(--text-muted)'
+                      }}
+                    >
+                      {formData.verificationDoc || 'Select PDF/Image file...'}
+                    </label>
+                    <input 
+                      id="signupVerificationDoc"
+                      type="file" 
+                      accept="image/*,application/pdf"
+                      style={{ display: 'none' }}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          setFormData({ ...formData, verificationDoc: file.name });
+                        }
+                      }}
+                      required={formData.role === 'advocate'}
+                    />
                   </div>
                 </div>
               </motion.div>
