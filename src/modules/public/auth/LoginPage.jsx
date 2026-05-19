@@ -12,6 +12,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [portal, setPortal] = useState('user'); // 'user' or 'admin'
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -23,6 +24,15 @@ const LoginPage = () => {
 
     try {
       const user = await login(email, password);
+      
+      if (portal === 'admin' && user.role !== 'admin') {
+        throw new Error('Access denied. This login is restricted to administrator accounts.');
+      }
+      
+      if (portal === 'user' && user.role === 'admin') {
+        throw new Error('Admin account detected. Please use the Admin Login tab.');
+      }
+
       // Redirect based on role
       if (user.role === 'admin') navigate('/admin-dashboard');
       else if (user.role === 'advocate') navigate('/advocate-dashboard');
@@ -64,11 +74,71 @@ const LoginPage = () => {
             <div className="brand-mark-large">L</div>
             <div style={{ textAlign: 'left' }}>
               <strong style={{ display: 'block', color: 'var(--text-heading)', fontSize: '20px' }}>LEGAL 24</strong>
-              <span style={{ color: 'var(--text-muted)', fontSize: '12px', fontWeight: '600', letterSpacing: '1px' }}>ADMIN PANEL</span>
+              <span style={{ color: portal === 'admin' ? '#ef4444' : 'var(--text-muted)', fontSize: '12px', fontWeight: '700', letterSpacing: '1px' }}>
+                {portal === 'admin' ? 'ADMIN PANEL' : 'USER PORTAL'}
+              </span>
             </div>
           </div>
           <h1>Welcome Back</h1>
-          <p>Enter your credentials to access your dashboard</p>
+          <p>
+            {portal === 'admin' 
+              ? 'Authorized administrative personnel access only' 
+              : 'Enter your credentials to access your dashboard'}
+          </p>
+        </div>
+
+        {/* Portal Switcher Tabs */}
+        <div style={{
+          display: 'flex',
+          background: 'var(--btn-bg)',
+          border: '1px solid var(--border-color)',
+          borderRadius: '12px',
+          padding: '4px',
+          marginBottom: '24px',
+          gap: '4px'
+        }}>
+          <button
+            type="button"
+            onClick={() => {
+              setPortal('user');
+              setError('');
+            }}
+            style={{
+              flex: 1,
+              padding: '10px 14px',
+              borderRadius: '8px',
+              border: 'none',
+              background: portal === 'user' ? 'rgba(108, 156, 255, 0.16)' : 'transparent',
+              color: portal === 'user' ? 'var(--accent-blue)' : 'var(--text-secondary)',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Client / Advocate
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setPortal('admin');
+              setError('');
+            }}
+            style={{
+              flex: 1,
+              padding: '10px 14px',
+              borderRadius: '8px',
+              border: 'none',
+              background: portal === 'admin' ? 'rgba(239, 68, 68, 0.16)' : 'transparent',
+              color: portal === 'admin' ? '#ff7f7f' : 'var(--text-secondary)',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Admin Login
+          </button>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -128,7 +198,15 @@ const LoginPage = () => {
             <Link to="/forgot-password" title="Recover your password" className="auth-link">Forgot password?</Link>
           </div>
 
-          <button type="submit" className="auth-btn" disabled={loading}>
+          <button 
+            type="submit" 
+            className="auth-btn" 
+            disabled={loading}
+            style={{
+              background: portal === 'admin' ? 'linear-gradient(135deg, #ef4444, #b91c1c)' : 'linear-gradient(135deg, #6c9cff, #4e7cff)',
+              boxShadow: portal === 'admin' ? '0 4px 15px rgba(239, 68, 68, 0.3)' : '0 4px 15px rgba(108, 156, 255, 0.3)'
+            }}
+          >
             {loading ? 'Authenticating...' : (
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                 Sign In <LogIn size={18} />
@@ -137,9 +215,11 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div className="auth-footer">
-          Don't have an account? <Link to="/signup" title="Create a new account" className="auth-link">Create Account</Link>
-        </div>
+        {portal === 'user' && (
+          <div className="auth-footer">
+            Don't have an account? <Link to="/signup" title="Create a new account" className="auth-link">Create Account</Link>
+          </div>
+        )}
       </motion.div>
     </div>
   );
