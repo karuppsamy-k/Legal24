@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../core/context/AuthContext'
 import Sidebar from '../../shared/components/organisms/Sidebar'
+import NotificationDrawer from '../../shared/components/organisms/NotificationDrawer'
 import { Clock, Briefcase, Calendar, FileText, MessageSquare } from 'lucide-react'
 import './advocate_dashboard.css'
 
@@ -48,6 +49,8 @@ export default function AdvocateLayout() {
       <main className="advocate-main">
         <Outlet context={{ setSidebarOpen, sidebarOpen }} />
       </main>
+
+      <NotificationDrawer />
     </div>
   )
 }

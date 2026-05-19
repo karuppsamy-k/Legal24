@@ -14,30 +14,14 @@ const advocates = [
 
 export default function AdvocatesPage() {
   const { sidebarOpen, setSidebarOpen } = useOutletContext()
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const closeSidebar = () => setSidebarOpen(false)
-
-  const handleNavClick = (id) => {
-    closeSidebar()
-    navigate(`/${id}`)
-  }
-
-  const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      logout();
-    }
-  }
-
-  const navItems = [
-    { label: 'Dash Board', id: 'admin-dashboard' },
-    { label: 'Approval & Control', id: 'approval' },
-    { label: 'Manage Users', id: 'users' },
-    { label: 'Manage Advocates', id: 'advocates', active: true },
-    { label: 'Reports & Analytics', id: 'reports' },
-    { label: 'Feed Backs', id: 'feedbacks' },
-  ]
+  const [advocateList, setAdvocateList] = useState(() => {
+    const dynamicAdvocates = JSON.parse(localStorage.getItem('legal24_advocates') || '[]');
+    const approvedDynamic = dynamicAdvocates.filter(a => a.status === 'approved');
+    return [...approvedDynamic, ...advocates];
+  });
 
   return (
     <>
@@ -48,37 +32,37 @@ export default function AdvocatesPage() {
         onMenuClick={() => setSidebarOpen(true)}
       />
 
-        <section className="dashboard-grid fade-up">
-          <article className="panel" style={{ gridColumn: '1 / -1' }}>
-            <div className="panel-header">
-              <div>
-                <h2>Advocate Directory</h2>
-                <p>Monitor and manage verified legal professionals</p>
-              </div>
-              <button type="button" style={{ padding: '8px 16px', background: '#6c9cff', border: 'none', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>+ Add Advocate</button>
+      <section className="dashboard-grid fade-up">
+        <article className="panel" style={{ gridColumn: '1 / -1' }}>
+          <div className="panel-header">
+            <div>
+              <h2>Advocate Directory</h2>
+              <p>Monitor and manage verified legal professionals</p>
             </div>
-            <div className="table-grid">
-              {advocates.map((advocate) => (
-                <div key={advocate.id} className="table-row">
-                  <div className="user-info">
-                    <strong>{advocate.name}</strong>
-                    <span>{advocate.specialization} • {advocate.experience}</span>
-                  </div>
-                  <div className="user-contact">
-                    <span style={{ color: '#9aa6d2' }}>{advocate.cases} Cases</span>
-                  </div>
-                  <div className="user-status">
-                    <span style={{ color: '#ffd700', fontSize: '13px' }}>⭐ {advocate.rating}</span>
-                  </div>
-                  <div className="user-actions" style={{ display: 'flex', gap: '8px' }}>
-                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Profile</button>
-                    <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(76, 225, 177, 0.16)', color: '#4ce1b1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Verify</button>
-                  </div>
+            <button type="button" style={{ padding: '8px 16px', background: '#6c9cff', border: 'none', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>+ Add Advocate</button>
+          </div>
+          <div className="table-grid">
+            {advocateList.map((advocate) => (
+              <div key={advocate.id} className="table-row">
+                <div className="user-info">
+                  <strong>{advocate.name}</strong>
+                  <span>{advocate.specialization} • {advocate.experience}</span>
                 </div>
-              ))}
-            </div>
-          </article>
-        </section>
+                <div className="user-contact">
+                  <span style={{ color: '#9aa6d2' }}>{advocate.cases || 0} Cases</span>
+                </div>
+                <div className="user-status">
+                  <span style={{ color: '#ffd700', fontSize: '13px' }}>⭐ {advocate.rating || '5.0'}</span>
+                </div>
+                <div className="user-actions" style={{ display: 'flex', gap: '8px' }}>
+                  <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(108, 156, 255, 0.16)', color: '#7fb2ff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Profile</button>
+                  <button style={{ flex: 1, padding: '8px 12px', background: 'rgba(76, 225, 177, 0.16)', color: '#4ce1b1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Verify</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
     </>
   )
 }

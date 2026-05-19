@@ -57,7 +57,7 @@ export default function ChatBot() {
         <div className="chatbot-window">
           <div className="chatbot-header">
             <div className="chatbot-header-title">
-              <Bot size={24} color="#6c9cff" />
+              <Bot size={24} className="chatbot-icon" />
               <div>
                 <h3>Legal24 Assistant</h3>
                 <span>Online</span>

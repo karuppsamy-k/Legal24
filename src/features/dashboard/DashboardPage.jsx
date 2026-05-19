@@ -403,7 +403,7 @@ export default function DashboardPage() {
         onMenuClick={() => setSidebarOpen(true)}
         actions={
           <>
-            <button type="button" className="icon-button">⚙️</button>
+            <button type="button" className="icon-button" onClick={() => navigate('/settings')} title="Settings">⚙️</button>
           </>
         }
       />

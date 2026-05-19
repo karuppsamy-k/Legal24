@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../core/context/AuthContext'
 import Sidebar from '../../shared/components/organisms/Sidebar'
+import ClientChatBot from './components/ClientChatBot'
+import NotificationDrawer from '../../shared/components/organisms/NotificationDrawer'
 import { LayoutDashboard, Activity, Calendar, FileText, CreditCard } from 'lucide-react'
 import './client_dashboard.css'
 import '../advocate_dashboard/advocate_dashboard.css'
@@ -43,6 +45,11 @@ export default function ClientLayout() {
       <main className="client-main">
         <Outlet context={{ setSidebarOpen, sidebarOpen }} />
       </main>
+
+      {/* Smart Chatbot — floating widget on every client page */}
+      <ClientChatBot />
+
+      <NotificationDrawer />
     </div>
   )
 }
