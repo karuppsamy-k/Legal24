@@ -1,5 +1,6 @@
 /* Auth Module Styles - Legal 24 Theme Integration */
-.auth-container, .auth-container * {
+.auth-container,
+.auth-container * {
   box-sizing: border-box;
 }
 
@@ -70,9 +71,17 @@
 }
 
 @keyframes blob-float {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(100px, 50px) scale(1.1); }
-  100% { transform: translate(-50px, 100px) scale(0.9); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(100px, 50px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-50px, 100px) scale(0.9);
+  }
 }
 
 /* Glassmorphism Card */
@@ -159,7 +168,7 @@
 .auth-input {
   width: 100%;
   padding: 14px 16px;
-  padding-left: 48px;
+  padding-left: 48px !important;
   background: var(--bg-panel);
   border: 1px solid var(--border-light);
   border-radius: 12px;
@@ -182,7 +191,7 @@
   transition: color 0.2s ease;
 }
 
-.auth-input:focus + .input-icon {
+.auth-input:focus+.input-icon {
   color: var(--accent-blue);
 }
 
@@ -339,30 +348,36 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Desktop Compact Scaling */
 @media (min-width: 1025px) {
   .auth-card {
-    max-width: 420px; /* Reduced from 480px */
-    padding: 36px; /* Reduced from 48px */
+    max-width: 420px;
+    /* Reduced from 480px */
+    padding: 36px;
+    /* Reduced from 48px */
     border-radius: 24px;
   }
 
   .brand-mark-large {
-    width: 40px; /* Reduced from 48px */
+    width: 40px;
+    /* Reduced from 48px */
     height: 40px;
     font-size: 20px;
   }
 
   .auth-header h1 {
-    font-size: 24px; /* Reduced from 28px */
+    font-size: 24px;
+    /* Reduced from 28px */
   }
 
   .auth-input {
     padding: 12px 14px;
-    padding-left: 44px;
+    padding-left: 44px !important;
     font-size: 14px;
   }
 
@@ -382,16 +397,16 @@
     padding: 32px 24px;
     border-radius: 24px;
   }
-  
+
   .auth-header h1 {
     font-size: 24px;
   }
-  
+
   .auth-bg-blob {
     width: 300px;
     height: 300px;
   }
-  
+
   .auth-bg-blob-2 {
     width: 250px;
     height: 250px;
